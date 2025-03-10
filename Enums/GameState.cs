@@ -1,15 +1,8 @@
-public enum PieceColor
-{
-    GREEN,
-    BLUE,
-    RED,
-    YELLOW
-}
+namespace LudoGame.Enums;
 
 public enum GameState
 {
     NOT_STARTED, // Lobby
     PLAYING,
-    PAUSED,
     FINISHED // Game over
 }
