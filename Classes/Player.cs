@@ -1,41 +1,38 @@
+namespace LudoGame.Classes;
+using LudoGame.Enums;
+
 public class Player
-{
-    public string? name;
-    public int Score { get; private set; }
-    private List<Piece> pieces;
-    public PieceColor Color { get; set; }
-
-    public Player(string name, List<Piece> pieces)
     {
-        this.name = name;
-        this.pieces = pieces;
-    }
+        public string Name { get; private set; }
+        public PieceColor Color { get; private set; }
+        public Piece[] Pieces { get; private set; }
+        public int Score { get; set; }
 
-    public void SetColor(PieceColor color)
-    {
-        Color = color; 
-
-        foreach (var piece in pieces)
+        public Player(string name, PieceColor color, Board board)
         {
-            piece.Color = color;
+            Name = name;
+            Color = color;
+            Score = 0;
+
+            // Create 4 pieces. The home square for each piece is retrieved from the board.
+            Pieces = new Piece[4];
+            for (int i = 0; i < 4; i++)
+            {
+                Square homeSquare = board.GetHomeSquare(color, i);
+                // Build the piece marker using ANSI codes (for example, red: "\u001b[31m1\u001b[0m")
+                string marker = "";
+                switch (color)
+                {
+                    case PieceColor.RED: marker = $"\u001b[31m{i + 1}\u001b[0m"; break;
+                    case PieceColor.BLUE: marker = $"\u001b[34m{i + 1}\u001b[0m"; break;
+                    case PieceColor.GREEN: marker = $"\u001b[32m{i + 1}\u001b[0m"; break;
+                    case PieceColor.YELLOW: marker = $"\u001b[33m{i + 1}\u001b[0m"; break;
+                }
+
+                Pieces[i] = new Piece(color, marker, homeSquare);
+
+                // --- NEW: Immediately register the piece at home so it appears in the board from the start ---
+                board.RegisterPieceAtHome(Pieces[i]);
+            }
         }
     }
-
-
-
-    public List<Piece> GetPieces()
-    {
-        return pieces;
-    }
-
-    // public bool CheckWin()
-    // {
-    //     return false;
-    // }
-
-    // public void IncrementScore()
-    // {
-    //     Score += 1;
-    // }
-
-}

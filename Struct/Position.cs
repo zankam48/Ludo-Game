@@ -1,3 +1,4 @@
+namespace LudoGame.Struct;
 public struct Position
 {
     public int Row { get; set; }

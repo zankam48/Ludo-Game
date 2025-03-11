@@ -1,9 +1,15 @@
+namespace LudoGame.Classes;
 public class Dice
 {
-    public int diceValue { get; set; }
+    private Random rand;
     
     public Dice()
     {
-        diceValue = 1;
+        rand = new Random();
+    }
+    
+    public int Roll()
+    {
+        return rand.Next(1, 7);
     }
 }

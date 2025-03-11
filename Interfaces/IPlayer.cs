@@ -1,4 +1,5 @@
-namespace LudoGame.Interface;
+namespace LudoGame.Interfaces;
+using LudoGame.Enums;
 public interface IPlayer
 {
     string Name { get; }
