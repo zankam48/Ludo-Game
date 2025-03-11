@@ -51,28 +51,28 @@ public class Board
             switch (color)
             {
                 case PieceColor.RED:
-                    if (pieceIndex == 0) return GetSquare(1, 1);
-                    if (pieceIndex == 1) return GetSquare(1, 4);
-                    if (pieceIndex == 2) return GetSquare(4, 1);
+                    if (pieceIndex == 0) return GetSquare(2, 2);
+                    if (pieceIndex == 1) return GetSquare(2, 4);
+                    if (pieceIndex == 2) return GetSquare(4, 2);
                     if (pieceIndex == 3) return GetSquare(4, 4);
                     break;
                 case PieceColor.BLUE:
-                    if (pieceIndex == 0) return GetSquare(1, 10);
-                    if (pieceIndex == 1) return GetSquare(1, 13);
+                    if (pieceIndex == 0) return GetSquare(2, 10);
+                    if (pieceIndex == 1) return GetSquare(2, 12);
                     if (pieceIndex == 2) return GetSquare(4, 10);
-                    if (pieceIndex == 3) return GetSquare(4, 13);
+                    if (pieceIndex == 3) return GetSquare(4, 12);
                     break;
                 case PieceColor.GREEN:
-                    if (pieceIndex == 0) return GetSquare(10, 1);
-                    if (pieceIndex == 1) return GetSquare(13, 1);
+                    if (pieceIndex == 0) return GetSquare(10, 2);
+                    if (pieceIndex == 1) return GetSquare(12, 2);
                     if (pieceIndex == 2) return GetSquare(10, 4);
-                    if (pieceIndex == 3) return GetSquare(13, 4);
+                    if (pieceIndex == 3) return GetSquare(12, 4);
                     break;
                 case PieceColor.YELLOW:
                     if (pieceIndex == 0) return GetSquare(10, 10);
-                    if (pieceIndex == 1) return GetSquare(13, 10);
-                    if (pieceIndex == 2) return GetSquare(10, 13);
-                    if (pieceIndex == 3) return GetSquare(13, 13);
+                    if (pieceIndex == 1) return GetSquare(12, 10);
+                    if (pieceIndex == 2) return GetSquare(10, 12);
+                    if (pieceIndex == 3) return GetSquare(12, 12);
                     break;
             }
             return null;
@@ -152,10 +152,10 @@ public class Board
         public bool IsHomeSquare(Square sq)
         {
             int r = sq.Row, c = sq.Col;
-            if ((r == 1 && (c == 1 || c == 4)) || (r == 4 && (c == 1 || c == 4))) return true;      // RED
-            if ((r == 1 && (c == 10 || c == 13)) || (r == 4 && (c == 10 || c == 13))) return true;  // BLUE
-            if ((r == 10 && (c == 1 || c == 4)) || (r == 13 && (c == 1 || c == 4))) return true;    // GREEN
-            if ((r == 10 && (c == 10 || c == 13)) || (r == 13 && (c == 10 || c == 13))) return true;// YELLOW
+            if ((r == 2 && (c == 2 || c == 4)) || (r == 4 && (c == 2 || c == 4))) return true;      // RED
+            if ((r == 2 && (c == 10 || c == 12)) || (r == 4 && (c == 10 || c == 12))) return true;  // BLUE
+            if ((r == 10 && (c == 2 || c == 4)) || (r == 12 && (c == 2 || c == 4))) return true;    // GREEN
+            if ((r == 10 && (c == 10 || c == 12)) || (r == 12 && (c == 10 || c == 12))) return true;// YELLOW
             return false;
         }
 
