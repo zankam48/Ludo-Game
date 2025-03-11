@@ -38,3 +38,10 @@ public class PlayerAI
     }
 
 }
+
+/***
+Condition :
+- Choose which piece to move by the AI
+  -> if there's a piece where the AI can kick another player piece, then choose it
+  -> 
+***/
