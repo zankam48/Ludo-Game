@@ -11,6 +11,10 @@ public class Board
         private Dictionary<Square, Piece> piecePositions;
 
         public PathManager PathManager { get; private set; }
+        List<(int, int)> safeCoords = new List<(int, int)>
+            {
+                (13,6), (12,8), (8,13), (6,12), (1,8), (2,6), (6,1), (8,2)
+            };
 
         public Board()
         {
@@ -27,7 +31,7 @@ public class Board
             piecePositions = new Dictionary<Square, Piece>();
 
             MarkEdges();
-            MarkSafeZones();
+            MarkSafeZones(safeCoords);
             PathManager = new PathManager(this);
             InitializePathVisuals();
             AssignHomes();
@@ -111,12 +115,9 @@ public class Board
         }
 
         // Mark safe zones with "*"
-        private void MarkSafeZones()
+        private void MarkSafeZones(List<(int, int)>safeCoords)
         {
-            List<(int, int)> safeCoords = new List<(int, int)>
-            {
-                (13,6), (12,8), (8,13), (6,12), (1,8), (2,6), (6,1), (8,2)
-            };
+            
             foreach (var (r, c) in safeCoords)
             {
                 Square sq = GetSquare(r, c);
@@ -190,7 +191,8 @@ public class Board
             if (piecePositions.TryGetValue(targetSquare, out Piece occupant))
             {
                 // occupant is the piece currently on targetSquare
-                if (occupant.Color != movingPiece.Color)
+                bool isOccupantInSafeZone = safeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
+                if (!isOccupantInSafeZone && (occupant.Color != movingPiece.Color))
                 {
                     // Kick occupant piece
                     controller.KickPiece(occupant);
