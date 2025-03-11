@@ -1,0 +1,15 @@
+D:\Coding Project\Zankam\Ludo\bin\Debug\net9.0\Ludo.exe
+D:\Coding Project\Zankam\Ludo\bin\Debug\net9.0\Ludo.deps.json
+D:\Coding Project\Zankam\Ludo\bin\Debug\net9.0\Ludo.runtimeconfig.json
+D:\Coding Project\Zankam\Ludo\bin\Debug\net9.0\Ludo.dll
+D:\Coding Project\Zankam\Ludo\bin\Debug\net9.0\Ludo.pdb
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.AssemblyInfoInputs.cache
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.AssemblyInfo.cs
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.csproj.CoreCompileInputs.cache
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.sourcelink.json
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.dll
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\refint\Ludo.dll
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.pdb
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\Ludo.genruntimeconfig.cache
+D:\Coding Project\Zankam\Ludo\obj\Debug\net9.0\ref\Ludo.dll

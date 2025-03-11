@@ -1,6 +1,6 @@
 namespace LudoGame.Enums;
 
-public enum PieceState
+public enum PieceStatus
 {
     AT_HOME,
     IN_PLAY,
