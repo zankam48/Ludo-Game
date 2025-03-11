@@ -1,5 +1,7 @@
+using LudoGame.Interfaces;
+
 namespace LudoGame.Classes;
-public class Dice
+public class Dice : IDice
 {
     private Random rand;
     

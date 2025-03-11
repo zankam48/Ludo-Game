@@ -1,12 +1,18 @@
 namespace LudoGame.Classes;
 using LudoGame.Enums;
+using LudoGame.Interfaces;
 
-public class Player
+public class Player : IPlayer
     {
         public string Name { get; private set; }
         public PieceColor Color { get; private set; }
         public Piece[] Pieces { get; private set; }
         public int Score { get; set; }
+
+        public void GetScore()
+        {
+            Score += Pieces.Count(p => p.Status == PieceStatus.AT_GOAL);
+        }
 
         public Player(string name, PieceColor color, Board board)
         {
