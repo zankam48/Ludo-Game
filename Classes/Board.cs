@@ -8,27 +8,15 @@ public class Board
         private Square[,] grid;
 
         // --- NEW: Dictionary to track which piece is on which square ---
-        private Dictionary<Square, Piece> piecePositions;
-        public Dictionary<Square, Piece> PiecePositions 
-        {
-            get {return piecePositions;} 
-            private set {piecePositions = value;}}
+        public Dictionary<Square, Piece> piecePositions;
 
         public PathManager PathManager { get; private set; }
-        private List<(int, int)> safeCoords = new List<(int, int)>
+        public List<(int, int)> safeCoords = new List<(int, int)>
             {
                 (13,6), (12,8), (8,13), (6,12), (1,8), (2,6), (6,1), (8,2)
             };
 
-        public List<(int, int)> SafeCoords {
-            get
-            {
-                return SafeCoords;
-            } 
-            private set
-            {
-                safeCoords = value;
-            }}
+      
 
         public Board()
         {

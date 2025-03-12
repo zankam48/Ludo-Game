@@ -153,10 +153,10 @@ public class GameController
         {
             if (targetSquare == null) return;
 
-            if (board.PiecePositions.TryGetValue(targetSquare, out Piece occupant))
+            if (board.piecePositions.TryGetValue(targetSquare, out Piece occupant))
             {
                 // occupant is the piece currently on targetSquare
-                bool isOccupantInSafeZone = board.SafeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
+                bool isOccupantInSafeZone = board.safeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
                 if (!isOccupantInSafeZone && (occupant.Color != movingPiece.Color))
                 {
                     // Kick occupant piece
@@ -200,8 +200,8 @@ public class GameController
             return OnDiceRoll != null ? OnDiceRoll(dice) : dice.Roll();
         }
 
-    internal void KickPiece(Piece occupant)
-    {
-        throw new NotImplementedException();
-    }
+    // internal void KickPiece(Piece occupant)
+    // {
+    //     throw new NotImplementedException();
+    // }
 }
