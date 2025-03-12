@@ -1,56 +1,44 @@
-namespace LudoGame.Classes;
-using System.Collections.Generic;
-
 public class Square
 {
     public int Row { get; set; }
     public int Col { get; set; }
-    public string BaseMarker { get; set; } // Default marker (e.g., ".", "*")
-    
-    // ✅ Store multiple pieces in a list, but keep `Occupant` for compatibility
-    private List<string> Occupants { get; set; } = new List<string>();
+    public string BaseMarker { get; set; } // Default marker for empty squares (".", "*")
 
-    public string Occupant
-    {
-        get
-        {
-            return Occupants.Count > 0 ? string.Join("", Occupants) : BaseMarker;
-        }
-        set
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
-                Occupants.Clear();
-                Occupants.Add(value);
-            }
-        }
-    }
+    private Stack<string> Occupants { get; set; } = new Stack<string>(); // ✅ Stack for pieces (last-in, first-out)
+
+    public string Occupant { get; set; } // ✅ Private setter to allow controlled updates
 
     public Square(int row, int col)
     {
         Row = row;
         Col = col;
         BaseMarker = " ";
+        Occupant = BaseMarker;
     }
 
-    // ✅ Add a piece marker without overwriting existing ones
+    // ✅ Add a piece to the stack (latest piece appears on top)
     public void AddPiece(string marker)
     {
-        if (!Occupants.Contains(marker))
-        {
-            Occupants.Add(marker);
-        }
+        Occupants.Push(marker);
+        Occupant = marker; // ✅ Update display
     }
 
-    // ✅ Remove a specific piece while keeping others
+    // ✅ Remove a piece and restore the previous one
     public void RemovePiece(string marker)
     {
-        Occupants.Remove(marker);
+        if (Occupants.Count > 0 && Occupants.Peek() == marker)
+        {
+            Occupants.Pop(); // Remove only if it's the top piece
+        }
+
+        // ✅ Update the occupant display
+        Occupant = Occupants.Count > 0 ? Occupants.Peek() : BaseMarker;
     }
 
-    // ✅ Clear all pieces, resetting to the base marker
+    // ✅ Reset the square if it's empty
     public void ResetSquare()
     {
         Occupants.Clear();
+        Occupant = BaseMarker;
     }
 }
