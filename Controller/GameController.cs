@@ -73,7 +73,7 @@ public class GameController
                     Square startSquare = mainPath.GetSquare(0);
 
                     // 1) Collision check
-                    board.HandleCollision(piece, startSquare, this);
+                    HandleCollision(piece, startSquare, board);
 
                     // 2) Update position
                     board.UpdatePiecePosition(piece, piece.HomeSquare, startSquare);
@@ -120,7 +120,7 @@ public class GameController
                 }
 
                 // 1) Collision check
-                board.HandleCollision(piece, newSquare, this);
+                HandleCollision(piece, newSquare, board);
 
                 // 2) Update position on the board
                 board.UpdatePiecePosition(piece, oldSquare, newSquare);
@@ -153,10 +153,10 @@ public class GameController
         {
             if (targetSquare == null) return;
 
-            if (piecePositions.TryGetValue(targetSquare, out Piece occupant))
+            if (board.PiecePositions.TryGetValue(targetSquare, out Piece occupant))
             {
                 // occupant is the piece currently on targetSquare
-                bool isOccupantInSafeZone = safeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
+                bool isOccupantInSafeZone = board.SafeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
                 if (!isOccupantInSafeZone && (occupant.Color != movingPiece.Color))
                 {
                     // Kick occupant piece
@@ -166,6 +166,18 @@ public class GameController
                 // If occupant is the same color, you could allow stacking or do nothing
                 // For now, do nothing if same color
             }
+        }
+
+        public Player? GetWinner()
+        {
+            foreach (var player in players)
+            {
+                if (player.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
+                {
+                    return player;
+                }
+            }
+            return null;
         }
 
         public void HandleSixRoll(IPiece piece, int rollResult)
