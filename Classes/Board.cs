@@ -166,26 +166,24 @@ public class Board
 
         // --- NEW: Update the occupant dictionary and the board squares after a move ---
         public void UpdatePiecePosition(Piece piece, Square oldSquare, Square newSquare)
+{
+    if (oldSquare != null)
+    {
+        oldSquare.RemovePiece(piece.Marker); // ✅ Remove only the moving piece
+
+        // If other pieces are still on the square, update its display
+        if (oldSquare.Occupant.Length == 0) 
         {
-            // Remove from old square
-            if (oldSquare != null && piecePositions.ContainsKey(oldSquare))
-            {
-                piecePositions.Remove(oldSquare);
-
-                // If it was a home square, clear occupant, else restore its base marker
-                if (IsHomeSquare(oldSquare))
-                    oldSquare.Occupant = " ";
-                else
-                    oldSquare.Occupant = oldSquare.BaseMarker;
-            }
-
-            // Place on new square
-            if (newSquare != null)
-            {
-                piecePositions[newSquare] = piece;
-                newSquare.Occupant = piece.Marker; // visually place the piece
-            }
+            oldSquare.Occupant = oldSquare.BaseMarker; // Restore base marker if empty
         }
+    }
+
+    if (newSquare != null)
+    {
+        newSquare.AddPiece(piece.Marker); // ✅ Add the piece
+    }
+}
+
 
         // --- NEW: Check if there's already a piece on targetSquare and handle collision if different color ---
         
