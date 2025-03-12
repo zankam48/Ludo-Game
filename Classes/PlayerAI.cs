@@ -43,5 +43,10 @@ public class PlayerAI
 Condition :
 - Choose which piece to move by the AI
   -> if there's a piece where the AI can kick another player piece, then choose it
-  -> 
+  -> distance from opps player
+  -> distance from the goal
+  -> likelihood to attack opps 
+  -> seeking safe zones
+  -> threat from opps
+  -> the need to move forward
 ***/

@@ -37,6 +37,8 @@ public class Board
             AssignHomes();
         }
 
+        
+
         public Square GetSquare(int row, int col)
         {
             if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE)
@@ -184,24 +186,7 @@ public class Board
         }
 
         // --- NEW: Check if there's already a piece on targetSquare and handle collision if different color ---
-        public void HandleCollision(Piece movingPiece, Square targetSquare, GameController controller)
-        {
-            if (targetSquare == null) return;
-
-            if (piecePositions.TryGetValue(targetSquare, out Piece occupant))
-            {
-                // occupant is the piece currently on targetSquare
-                bool isOccupantInSafeZone = safeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
-                if (!isOccupantInSafeZone && (occupant.Color != movingPiece.Color))
-                {
-                    // Kick occupant piece
-                    controller.KickPiece(occupant);
-                    // occupant is now removed from occupantMap inside KickPiece
-                }
-                // If occupant is the same color, you could allow stacking or do nothing
-                // For now, do nothing if same color
-            }
-        }
+        
 
         public void PrintBoard()
         {

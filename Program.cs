@@ -7,11 +7,15 @@ using LudoGame.Enums;
 using LudoGame.Interfaces;
 using System;
 
+
 class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Console Ludo Game!");
+            
+            
+
 
             int playerCount = 0;
             while (playerCount < 2 || playerCount > 4)
@@ -28,13 +32,36 @@ class Program
 
             // Create players. Each gets a unique color.
             List<Player> players = new List<Player>();
-            PieceColor[] availableColors = { PieceColor.RED, PieceColor.BLUE, PieceColor.YELLOW, PieceColor.GREEN };
-            for (int i = 0; i < playerCount; i++)
-            {
-                Console.Write($"Enter name for Player {i + 1}: ");
-                string playerName = Console.ReadLine() ?? $"Player{i + 1}";
-                players.Add(new Player(playerName, availableColors[i], board));
-            }
+List<PieceColor> availableColors = new List<PieceColor> { PieceColor.RED, PieceColor.BLUE, PieceColor.YELLOW, PieceColor.GREEN };
+
+for (int i = 0; i < playerCount; i++)
+{
+    Console.Write($"Enter name for Player {i + 1}: ");
+    string playerName = Console.ReadLine() ?? $"Player{i + 1}";
+
+    // Dynamically display remaining available colors
+    Console.WriteLine("Choose piece color:");
+    for (int j = 0; j < availableColors.Count; j++) // ✅ `Count` now works correctly
+    {
+        Console.WriteLine($"{j + 1}. {availableColors[j]}"); // ✅ Displays only remaining colors
+    }
+
+    int colorIndex;
+    while (true)
+    {
+        Console.Write("Enter the number corresponding to your color choice: ");
+        if (int.TryParse(Console.ReadLine(), out colorIndex) && colorIndex >= 1 && colorIndex <= availableColors.Count)
+        {
+            break; // ✅ Valid selection
+        }
+        Console.WriteLine("❌ Invalid choice. Please select from the available colors.");
+    }
+
+    PieceColor chosenColor = availableColors[colorIndex - 1]; // ✅ Get selected color
+    players.Add(new Player(playerName, chosenColor, board)); // ✅ Assign player color
+    availableColors.RemoveAt(colorIndex - 1); // ✅ Remove chosen color from available options
+}
+
 
             // Create dice and the game controller.
             Dice dice = new Dice();
