@@ -12,7 +12,12 @@ class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to Console Ludo Game!");
+            List<string> messages = new List<string>
+            {
+                "Enter the number of players (2-4)",
+                "Invalid input. Please enter a number between 2 and 4.",
+                
+            };
             
             
 
