@@ -22,7 +22,6 @@ public class PathManager
 
         private void InitializeFullPath()
         {
-            // Coordinates for the full loop (0-indexed).
             List<(int, int)> coordinates = new List<(int, int)>
             {
                 (6,1),(6,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5),
@@ -41,7 +40,6 @@ public class PathManager
 
         private void InitializeMainPaths()
         {
-            // Create a wrapped main path for each color.
             mainPaths[PieceColor.RED] = GetWrappedPath(0);
             mainPaths[PieceColor.GREEN] = GetWrappedPath(13);
             mainPaths[PieceColor.YELLOW] = GetWrappedPath(26);
@@ -61,7 +59,6 @@ public class PathManager
 
         private void InitializeGoalPaths()
         {
-            // For each color, define goal path squares with a colored dot.
             // Red goal path
             Path redGoal = new Path();
             List<(int, int)> redGoalCoords = new List<(int, int)>

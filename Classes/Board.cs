@@ -7,7 +7,6 @@ public class Board
 
         private Square[,] grid;
 
-        // --- NEW: Dictionary to track which piece is on which square ---
         public Dictionary<Square, Piece> piecePositions;
 
         public PathManager PathManager { get; private set; }
@@ -29,7 +28,6 @@ public class Board
                 }
             }
 
-            // Initialize occupant mapping
             piecePositions = new Dictionary<Square, Piece>();
 
             MarkEdges();
@@ -48,7 +46,6 @@ public class Board
             return null;
         }
 
-        // Get the home square for a given color and piece index (0–3).
         public Square GetHomeSquare(PieceColor color, int pieceIndex)
         {
             // Home positions:
@@ -85,16 +82,12 @@ public class Board
             }
             return null;
         }
-
-        // --- NEW: Called by Player constructor to place a piece in home from the start ---
         public void RegisterPieceAtHome(Piece piece)
         {
             Square home = piece.HomeSquare;
             if (home != null)
             {
-                // Store occupant in dictionary so we know which piece is here
                 piecePositions[home] = piece;
-                // Show the piece marker in that home square
                 home.Occupant = piece.Marker;
             }
         }
@@ -118,7 +111,6 @@ public class Board
             }
         }
 
-        // Mark safe zones with "*"
         private void MarkSafeZones(List<(int, int)>safeCoords)
         {
             
@@ -133,7 +125,6 @@ public class Board
             }
         }
 
-        // Set path squares (if not already marked) with "."
         private void InitializePathVisuals()
         {
             foreach (Square sq in PathManager.GetFullPath().GetSquares())
@@ -155,14 +146,10 @@ public class Board
 }
 
 
-        // Assign the home markers for each color. (Here, the squares themselves are already set up.)
         private void AssignHomes()
         {
-            // In this design the home squares are used directly via GetHomeSquare.
-            // They will display a piece as soon as RegisterPieceAtHome is called.
         }
 
-        // --- NEW: Check if a square is a home square for any color (used to decide occupant text) ---
         public bool IsHomeSquare(Square sq)
         {
             int r = sq.Row, c = sq.Col;
@@ -173,36 +160,31 @@ public class Board
             return false;
         }
 
-        // --- NEW: Update the occupant dictionary and the board squares after a move ---
         public void UpdatePiecePosition(Piece piece, Square oldSquare, Square newSquare)
         {
             if (oldSquare != null)
     {
-        oldSquare.RemovePiece(piece.Marker); // Remove only the moving piece
+        oldSquare.RemovePiece(piece.Marker); 
 
-        // ✅ Ensure old square is completely cleared from `piecePositions`
-        if (!oldSquare.Occupant.Any(char.IsDigit)) // No more pieces left
+        if (!oldSquare.Occupant.Any(char.IsDigit)) 
         {
             piecePositions.Remove(oldSquare);
         }
     }
 
-    // ✅ Ensure new square reference is set properly
     if (newSquare != null)
     {
         newSquare.AddPiece(piece.Marker);
 
-        // ✅ Remove any previous references in case of outdated links
         if (piecePositions.ContainsValue(piece))
         {
             var previousSquare = piecePositions.FirstOrDefault(x => x.Value == piece).Key;
             if (previousSquare != null && previousSquare != newSquare)
             {
-                piecePositions.Remove(previousSquare); // ✅ Remove outdated entry
+                piecePositions.Remove(previousSquare); 
             }
         }
 
-        // ✅ Finally, update `piecePositions`
         piecePositions[newSquare] = piece;
     }
 
@@ -218,8 +200,6 @@ public class Board
         }
 
 
-
-        // --- NEW: Check if there's already a piece on targetSquare and handle collision if different color ---
         
 
         public void PrintBoard()

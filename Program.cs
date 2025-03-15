@@ -13,7 +13,6 @@
         {
             IDisplay display = new Display();
 
-            // Prompt for the number of players.
             int playerCount = 0;
             while (playerCount < 2 || playerCount > 4)
             {
@@ -24,11 +23,9 @@
                 }
             }
 
-            // Create the board.
             Board board = new Board();
             display.DisplayBoard(board);
 
-            // Create players. Each gets a unique color.
             List<Player> players = new List<Player>();
             List<PieceColor> availableColors = new List<PieceColor> { PieceColor.RED, PieceColor.BLUE, PieceColor.YELLOW, PieceColor.GREEN };
 
@@ -36,7 +33,6 @@
             {
                 string playerName = display.GetInput($"Enter name for Player {i + 1}: ");
 
-                // Dynamically display remaining available colors.
                 display.DisplayMessage("Choose piece color:");
                 for (int j = 0; j < availableColors.Count; j++)
                 {
@@ -57,11 +53,9 @@
                 availableColors.RemoveAt(colorIndex - 1);
             }
 
-            // Create dice and the game controller.
             Dice dice = new Dice();
             GameController gameController = new GameController(players, dice, board);
 
-            // Set up delegates.
             gameController.OnDiceRoll = (d) => d.Roll();
             gameController.OnNextPlayerTurn = (player) =>
             {
@@ -76,7 +70,6 @@
                 }
             };
 
-            // Main game loop.
             while (true)
             {
                 Player currentPlayer = gameController.currentPlayer;
@@ -95,7 +88,6 @@
                         break;
                     }
 
-                    // Display pieces status.
                     display.DisplayMessage("Your pieces:");
                     for (int i = 0; i < currentPlayer.Pieces.Length; i++)
                     {
@@ -104,7 +96,6 @@
                         display.DisplayMessage($"  [{i + 1}] Piece {i + 1}: {status}");
                     }
 
-                    // Prompt the player to select a piece.
                     Piece selectedPiece;
                     while (true)
                     {
@@ -116,7 +107,6 @@
                         }
                         selectedPiece = currentPlayer.Pieces[selectedIndex - 1];
 
-                        // If piece is at home but roll is less than 6, try another piece.
                         if (selectedPiece.Status == PieceStatus.AT_HOME && rollValue < 6 && gameController.HasPieceInPlay(currentPlayer))
                         {
                             display.DisplayMessage("❌ Invalid move! Choose a piece that is already in play.");
@@ -125,12 +115,11 @@
                         break;
                     }
 
-                    // Check for a six roll.
                     if (rollValue == 6)
                     {
                         gameController.HandleSixRoll(selectedPiece, rollValue);
                         gameController.MovePiece(selectedPiece, rollValue);
-                        continueRolling = true; // Extra turn for rolling 6.
+                        continueRolling = true; 
                     }
                     else
                     {

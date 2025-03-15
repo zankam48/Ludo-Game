@@ -16,7 +16,7 @@ public class Piece : IPiece
             Color = color;
             Marker = marker;
             HomeSquare = homeSquare;
-            Position = homeSquare; // initially, the piece is physically on its home square
+            Position = homeSquare; 
             Status = PieceStatus.AT_HOME;
             Steps = 0;
         }

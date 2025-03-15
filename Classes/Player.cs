@@ -20,12 +20,10 @@ public class Player : IPlayer
             Color = color;
             Score = 0;
 
-            // Create 4 pieces. The home square for each piece is retrieved from the board.
             Pieces = new Piece[4];
             for (int i = 0; i < 4; i++)
             {
                 Square homeSquare = board.GetHomeSquare(color, i);
-                // Build the piece marker using ANSI codes (for example, red: "\u001b[31m1\u001b[0m")
                 string marker = "";
                 switch (color)
                 {
@@ -37,7 +35,6 @@ public class Player : IPlayer
 
                 Pieces[i] = new Piece(color, marker, homeSquare);
 
-                // --- NEW: Immediately register the piece at home so it appears in the board from the start ---
                 board.RegisterPieceAtHome(Pieces[i]);
             }
         }

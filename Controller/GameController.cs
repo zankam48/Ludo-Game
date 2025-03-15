@@ -12,7 +12,6 @@ public class GameController
         public Player currentPlayer;
         public int currentPlayerIndex;
 
-        // Delegates for dice roll, next turn, and handling a six.
         public Func<Dice, int> OnDiceRoll;
         public Action<Player> OnNextPlayerTurn;
         public delegate void HandleSixRollDelegate(Player player, IPiece piece, int rollResult);
@@ -53,29 +52,22 @@ public class GameController
             return false;
         }
 
-        // --- MODIFIED: MovePiece now handles collision via board.HandleCollision,
-        //               and calls the new UpdatePiecePosition that uses piece objects. ---
         public bool MovePiece(IPiece ipiece, int diceValue)
         {
             Piece piece = ipiece as Piece;
             if (piece == null) return false;
 
-            // Ensure the piece belongs to the current player.
             if (piece.Color != currentPlayer.Color) return false;
 
-            // If the piece is at home:
             if (piece.Status == PieceStatus.AT_HOME)
             {
                 if (diceValue == 6)
                 {
-                    // Move the piece to start of main path
                     var mainPath = board.PathManager.GetMainPath(piece.Color);
                     Square startSquare = mainPath.GetSquare(0);
 
-                    // 1) Collision check
                     HandleCollision(piece, startSquare, board);
 
-                    // 2) Update position
                     board.UpdatePiecePosition(piece, piece.HomeSquare, startSquare);
 
                     piece.Position = startSquare;
@@ -85,7 +77,7 @@ public class GameController
                 }
                 else
                 {
-                    return false; // can't move out of home unless dice = 6
+                    return false; 
                 }
             }
             if (piece.Status == PieceStatus.IN_PLAY)
@@ -133,7 +125,6 @@ public class GameController
                 Square oldSquare = occupant.Position;
                 Square homeSquare = occupant.HomeSquare;
 
-                // Remove occupant from old square, place occupant back in home square
                 board.UpdatePiecePosition(occupant, oldSquare, homeSquare);
 
                 occupant.Position = homeSquare;
@@ -190,8 +181,4 @@ public class GameController
             return OnDiceRoll != null ? OnDiceRoll(dice) : dice.Roll();
         }
 
-    // internal void KickPiece(Piece occupant)
-    // {
-    //     throw new NotImplementedException();
-    // }
 }
