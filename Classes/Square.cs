@@ -1,3 +1,4 @@
+namespace LudoGame.Classes;
 public class Square
 {
     public int Row { get; set; }
@@ -26,13 +27,27 @@ public class Square
     // ✅ Remove a piece and restore the previous one
     public void RemovePiece(string marker)
     {
-        if (Occupants.Count > 0 && Occupants.Peek() == marker)
+        // if (Occupants.Count > 0 && Occupants.Peek() == marker)
+        // {
+        //     Occupants.Pop(); // Remove only if it's the top piece
+        // }
+
+
+        if (Occupants.Contains(marker))
         {
-            Occupants.Pop(); // Remove only if it's the top piece
+            List<string> temp = [.. Occupants];
+            temp.Remove(marker);
+            Occupants = new Stack<string>(temp);
         }
 
-        // ✅ Update the occupant display
-        Occupant = Occupants.Count > 0 ? Occupants.Peek() : BaseMarker;
+        if (Occupants.Count > 0)
+        {
+            Occupant = Occupants.Peek();
+        }
+        else
+        {
+            Occupant = BaseMarker; // Reset to default marker if no pieces are left
+        }
     }
 
     // ✅ Reset the square if it's empty

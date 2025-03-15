@@ -166,17 +166,47 @@ public class Board
 
         // --- NEW: Update the occupant dictionary and the board squares after a move ---
         public void UpdatePiecePosition(Piece piece, Square oldSquare, Square newSquare)
-{
-    if (oldSquare != null)
+        {
+            if (oldSquare != null)
     {
-        oldSquare.RemovePiece(piece.Marker); // ✅ Remove only the moving piece
+        oldSquare.RemovePiece(piece.Marker); // Remove only the moving piece
+
+        // ✅ Ensure old square is completely cleared from `piecePositions`
+        if (!oldSquare.Occupant.Any(char.IsDigit)) // No more pieces left
+        {
+            piecePositions.Remove(oldSquare);
+        }
     }
 
+    // ✅ Ensure new square reference is set properly
     if (newSquare != null)
     {
-        newSquare.AddPiece(piece.Marker); // ✅ Add the moving piece
+        newSquare.AddPiece(piece.Marker);
+
+        // ✅ Remove any previous references in case of outdated links
+        if (piecePositions.ContainsValue(piece))
+        {
+            var previousSquare = piecePositions.FirstOrDefault(x => x.Value == piece).Key;
+            if (previousSquare != null && previousSquare != newSquare)
+            {
+                piecePositions.Remove(previousSquare); // ✅ Remove outdated entry
+            }
+        }
+
+        // ✅ Finally, update `piecePositions`
+        piecePositions[newSquare] = piece;
     }
-}
+
+            if (piece.Status == PieceStatus.AT_HOME)
+            {
+                if (piecePositions.ContainsKey(oldSquare))
+                    piecePositions.Remove(oldSquare);
+            }
+            else
+            {
+                piecePositions[newSquare] = piece;
+            }
+        }
 
 
 

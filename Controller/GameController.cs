@@ -88,7 +88,6 @@ public class GameController
                     return false; // can't move out of home unless dice = 6
                 }
             }
-            // If the piece is already in play:
             if (piece.Status == PieceStatus.IN_PLAY)
             {
                 int newSteps = piece.Steps + diceValue;
@@ -98,14 +97,12 @@ public class GameController
                 Square oldSquare = piece.Position;
                 Square newSquare = null;
 
-                // If still on main path
                 if (newSteps < mainPath.Count)
                 {
                     newSquare = mainPath.GetSquare(newSteps);
                 }
                 else
                 {
-                    // Transition to goal path
                     int over = newSteps - mainPath.Count;
                     if (over < goalPath.Count)
                     {
@@ -113,16 +110,13 @@ public class GameController
                     }
                     else
                     {
-                        // The piece has reached or exceeded the final goal position
                         newSquare = goalPath.GetSquare(goalPath.Count - 1);
                         piece.Status = PieceStatus.AT_GOAL;
                     }
                 }
 
-                // 1) Collision check
                 HandleCollision(piece, newSquare, board);
 
-                // 2) Update position on the board
                 board.UpdatePiecePosition(piece, oldSquare, newSquare);
 
                 piece.Position = newSquare;
@@ -132,39 +126,35 @@ public class GameController
             return false;
         }
 
-        // --- NEW: KickPiece method to send occupant back home ---
-        public void KickPiece(IPiece ipiece)
+        public void KickPiece(Piece occupant)
         {
-            Piece occupant = ipiece as Piece;
             if (occupant == null) return;
+            else {
+                Square oldSquare = occupant.Position;
+                Square homeSquare = occupant.HomeSquare;
 
-            Square oldSquare = occupant.Position;
-            Square homeSquare = occupant.HomeSquare;
+                // Remove occupant from old square, place occupant back in home square
+                board.UpdatePiecePosition(occupant, oldSquare, homeSquare);
 
-            // Remove occupant from old square, place occupant back in home square
-            board.UpdatePiecePosition(occupant, oldSquare, homeSquare);
+                occupant.Position = homeSquare;
+                occupant.Status = PieceStatus.AT_HOME;
+                occupant.Steps = 0;
+            }
 
-            occupant.Position = homeSquare;
-            occupant.Status = PieceStatus.AT_HOME;
-            occupant.Steps = 0;
+            
         }
 
         public void HandleCollision(Piece movingPiece, Square targetSquare, Board board)
         {
             if (targetSquare == null) return;
 
-            if (board.piecePositions.TryGetValue(targetSquare, out Piece occupant))
+            if (board.piecePositions.TryGetValue(targetSquare, out Piece? occupant))
             {
-                // occupant is the piece currently on targetSquare
                 bool isOccupantInSafeZone = board.safeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
                 if (!isOccupantInSafeZone && (occupant.Color != movingPiece.Color))
                 {
-                    // Kick occupant piece
                     KickPiece(occupant);
-                    // occupant is now removed from occupantMap inside KickPiece
                 }
-                // If occupant is the same color, you could allow stacking or do nothing
-                // For now, do nothing if same color
             }
         }
 

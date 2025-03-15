@@ -31,6 +31,7 @@ public class PlayerAI
             }
 
             Pieces[i] = new Piece(color, marker, homeSquare);
+            
 
             // --- NEW: Immediately register the piece at home so it appears in the board from the start ---
             board.RegisterPieceAtHome(Pieces[i]);
