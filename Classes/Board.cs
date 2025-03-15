@@ -146,6 +146,15 @@ public class Board
             }
         }
 
+        public List<Piece> GetPiecesOnSquare(Square square)
+{
+    return piecePositions
+        .Where(kv => kv.Key == square)
+        .Select(kv => kv.Value)
+        .ToList();
+}
+
+
         // Assign the home markers for each color. (Here, the squares themselves are already set up.)
         private void AssignHomes()
         {
