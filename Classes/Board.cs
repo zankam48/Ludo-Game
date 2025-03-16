@@ -38,7 +38,6 @@ public class Board
         }
 
         
-
         public Square GetSquare(int row, int col)
         {
             if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE)
@@ -155,7 +154,6 @@ public class Board
         }
 
 
-
         private void AssignHomes()
         {
         }
@@ -236,9 +234,6 @@ public class Board
             }
         }
 
-
-
-        
 
         public void PrintBoard()
         {

@@ -52,6 +52,15 @@ public class GameController
             return false;
         }
 
+        // public bool CanPieceMove(Piece piece, int diceValue)
+        // {
+        //     var goalPath = board.PathManager.GetGoalPath(piece.Color);
+        //     Square goalSquare = goalPath[last index] // goal square
+        //     - check if diceValue > distance(piecepos, targetSquare) false can't move the piece, move another piece if there aren't any then 
+        //     - check if diceValue > distance(piecepos, targetSquare) true can move the piece
+        //     - check if diceValue = distance(piecepos, targetSquare) true can move the piece and the piece about to goal
+        // }
+
         public bool MovePiece(IPiece ipiece, int diceValue)
         {
             Piece piece = ipiece as Piece;
