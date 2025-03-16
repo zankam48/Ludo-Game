@@ -115,7 +115,7 @@
                         }
                         selectedPiece = currentPlayer.Pieces[selectedIndex - 1];
 
-                        if (selectedPiece.Status == PieceStatus.AT_HOME && rollValue < 6 && gameController.HasPieceInPlay(currentPlayer))
+                        if ((selectedPiece.Status == PieceStatus.AT_HOME && rollValue < 6 && gameController.HasPieceInPlay(currentPlayer)) || (selectedPiece.Status == PieceStatus.AT_GOAL))
                         {
                             display.DisplayMessage("❌ Invalid move! Choose a piece that is already in play.");
                             continue;
