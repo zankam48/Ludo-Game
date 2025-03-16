@@ -138,16 +138,18 @@ public class GameController
         public void HandleCollision(Piece movingPiece, Square targetSquare, Board board)
         {
             if (targetSquare == null) return;
-
-            if (board.piecePositions.TryGetValue(targetSquare, out Piece? occupant))
+            
+            if (board.safeCoords.Contains((targetSquare.Row, targetSquare.Col)))
+                return;
+            
+            List<Piece> piecesOnSquare = board.GetPiecesOnSquare(targetSquare);
+            
+            foreach (var occupant in piecesOnSquare.Where(p => p.Color != movingPiece.Color).ToList())
             {
-                bool isOccupantInSafeZone = board.safeCoords.Contains((occupant.Position.Row, occupant.Position.Col));
-                if (!isOccupantInSafeZone && (occupant.Color != movingPiece.Color))
-                {
-                    KickPiece(occupant);
-                }
+                KickPiece(occupant);
             }
         }
+
 
         public int GetRemainingPlayers()
         {

@@ -7,7 +7,7 @@ public class Board
 
         private Square[,] grid;
 
-        public Dictionary<Square, Piece> piecePositions;
+        public Dictionary<Square, List<Piece>> piecePositions;
 
         public PathManager PathManager { get; private set; }
         public List<(int, int)> safeCoords = new List<(int, int)>
@@ -28,7 +28,7 @@ public class Board
                 }
             }
 
-            piecePositions = new Dictionary<Square, Piece>();
+            piecePositions = new Dictionary<Square, List<Piece>>();
 
             MarkEdges();
             MarkSafeZones(safeCoords);
@@ -87,10 +87,18 @@ public class Board
             Square home = piece.HomeSquare;
             if (home != null)
             {
-                piecePositions[home] = piece;
+                if (piecePositions.ContainsKey(home))
+                {
+                    piecePositions[home].Add(piece);
+                }
+                else
+                {
+                    piecePositions[home] = new List<Piece> { piece };
+                }
                 home.Occupant = piece.Marker;
             }
         }
+
 
         // Mark board edges with "."
         private void MarkEdges()
@@ -138,12 +146,14 @@ public class Board
         }
 
         public List<Piece> GetPiecesOnSquare(Square square)
-{
-    return piecePositions
-        .Where(kv => kv.Key == square)
-        .Select(kv => kv.Value)
-        .ToList();
-}
+        {
+            if (piecePositions.TryGetValue(square, out List<Piece> pieces))
+            {
+                return pieces;
+            }
+            return new List<Piece>();
+        }
+
 
 
         private void AssignHomes()
@@ -163,41 +173,69 @@ public class Board
         public void UpdatePiecePosition(Piece piece, Square oldSquare, Square newSquare)
         {
             if (oldSquare != null)
-    {
-        oldSquare.RemovePiece(piece.Marker); 
-
-        if (!oldSquare.Occupant.Any(char.IsDigit)) 
-        {
-            piecePositions.Remove(oldSquare);
-        }
-    }
-
-    if (newSquare != null)
-    {
-        newSquare.AddPiece(piece.Marker);
-
-        if (piecePositions.ContainsValue(piece))
-        {
-            var previousSquare = piecePositions.FirstOrDefault(x => x.Value == piece).Key;
-            if (previousSquare != null && previousSquare != newSquare)
             {
-                piecePositions.Remove(previousSquare); 
+                oldSquare.RemovePiece(piece.Marker);
+                if (piecePositions.ContainsKey(oldSquare))
+                {
+                    piecePositions[oldSquare].Remove(piece);
+                    if (piecePositions[oldSquare].Count == 0)
+                    {
+                        piecePositions.Remove(oldSquare);
+                    }
+                }
             }
-        }
 
-        piecePositions[newSquare] = piece;
-    }
+            if (newSquare != null)
+            {
+                newSquare.AddPiece(piece.Marker);
+
+                Square previousSquare = piecePositions.FirstOrDefault(x => x.Value.Contains(piece)).Key;
+                if (previousSquare != null && previousSquare != newSquare)
+                {
+                    piecePositions[previousSquare].Remove(piece);
+                    if (piecePositions[previousSquare].Count == 0)
+                    {
+                        piecePositions.Remove(previousSquare);
+                    }
+                }
+
+                if (piecePositions.ContainsKey(newSquare))
+                {
+                    piecePositions[newSquare].Add(piece);
+                }
+                else
+                {
+                    piecePositions[newSquare] = new List<Piece> { piece };
+                }
+            }
 
             if (piece.Status == PieceStatus.AT_HOME)
             {
-                if (piecePositions.ContainsKey(oldSquare))
-                    piecePositions.Remove(oldSquare);
+                if (oldSquare != null && piecePositions.ContainsKey(oldSquare))
+                {
+                    piecePositions[oldSquare].Remove(piece);
+                    if (piecePositions[oldSquare].Count == 0)
+                    {
+                        piecePositions.Remove(oldSquare);
+                    }
+                }
             }
             else
             {
-                piecePositions[newSquare] = piece;
+                if (newSquare != null)
+                {
+                    if (!piecePositions.ContainsKey(newSquare))
+                    {
+                        piecePositions[newSquare] = new List<Piece>();
+                    }
+                    if (!piecePositions[newSquare].Contains(piece))
+                    {
+                        piecePositions[newSquare].Add(piece);
+                    }
+                }
             }
         }
+
 
 
         
