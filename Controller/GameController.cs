@@ -149,6 +149,12 @@ public class GameController
             }
         }
 
+        public int GetRemainingPlayers()
+        {
+            return players.Count(p => p.Pieces.Any(piece => piece.Status != PieceStatus.AT_GOAL));
+        }
+
+
         public Player? GetWinner()
         {
             foreach (var player in players)
@@ -167,12 +173,40 @@ public class GameController
                 OnSixRoll?.Invoke(currentPlayer, piece, rollResult);
         }
 
+        // public void NextPlayerTurn()
+        // {
+        //     currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+        //     currentPlayer = players[currentPlayerIndex];
+        //     OnNextPlayerTurn?.Invoke(currentPlayer);
+        // }
+
         public void NextPlayerTurn()
         {
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
-            currentPlayer = players[currentPlayerIndex];
+            do
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+                currentPlayer = players[currentPlayerIndex];
+
+                if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
+                {
+                    continue; // skip to the next player
+                }
+
+                if (GetRemainingPlayers() == 1)
+                {
+                    // last remaining player
+                    Player loser = players.First(p => p.Pieces.Any(piece => piece.Status != PieceStatus.AT_GOAL));
+                    Console.WriteLine($"🔥 {loser.Name} ({loser.Color}) is the last player left and LOSES!");
+                    Environment.Exit(0); 
+                }
+
+                break; 
+
+            } while (true);
+
             OnNextPlayerTurn?.Invoke(currentPlayer);
         }
+
 
         public int RollDice()
         {

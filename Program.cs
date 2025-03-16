@@ -75,11 +75,19 @@
                 Player currentPlayer = gameController.currentPlayer;
                 display.DisplayMessage($"\nIt's {currentPlayer.Name}'s turn ({currentPlayer.Color})!");
 
+                if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
+                {
+                    display.DisplayMessage($"🚀 {currentPlayer.Name} has finished! Skipping their turn.");
+                    gameController.NextPlayerTurn();
+                    continue; 
+                }
+
                 bool continueRolling;
                 do
                 {
                     continueRolling = false;
-                    int rollValue = gameController.RollDice();
+                    // int rollValue = gameController.RollDice();
+                    int rollValue = Convert.ToInt32(Console.ReadLine());
                     display.DisplayMessage($"🎲 {currentPlayer.Name} rolled a {rollValue}.");
 
                     if (!gameController.CanPlayerMove(currentPlayer, rollValue))
@@ -127,6 +135,12 @@
                     }
 
                     display.DisplayBoard(board);
+
+                    if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
+                    {
+                        display.DisplayMessage($"🎉 {currentPlayer.Name} has finished all pieces!");
+                        gameController.NextPlayerTurn();
+                    }
 
                 } while (continueRolling);
 

@@ -49,4 +49,9 @@ public class Square
         Occupants.Clear();
         Occupant = BaseMarker;
     }
+
+    public bool isBlockade()
+    {
+        return Occupants.Count > 1;
+    }
 }
