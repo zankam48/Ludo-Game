@@ -10,7 +10,7 @@ public struct Position
         Column = column;
     }
 
-    public override bool Equals(Object obj)
+    public override bool Equals(object obj)
     {
         return obj is Position other && Row == other.Row && Column == other.Column;
     }
@@ -19,4 +19,6 @@ public struct Position
     {
         return (Row, Column).GetHashCode();
     }
+
+    public override string ToString() => $"({Row},{Column})";
 }

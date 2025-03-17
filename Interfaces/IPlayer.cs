@@ -8,7 +8,4 @@ public interface IPlayer
     Piece[] Pieces { get; }
     int Score { get; }
 
-    // PieceColor GetColor();
-    void GetScore();
-    // bool HasPieceAtHome();
 }

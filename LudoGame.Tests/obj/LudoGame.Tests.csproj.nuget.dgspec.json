@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj": {}
+    "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\LudoGame.Tests\\LudoGame.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj": {
+    "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\LudoGame.Tests\\LudoGame.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj",
-        "projectName": "Ludo",
-        "projectPath": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj",
+        "projectUniqueName": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\LudoGame.Tests\\LudoGame.Tests.csproj",
+        "projectName": "LudoGame.Tests",
+        "projectPath": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\LudoGame.Tests\\LudoGame.Tests.csproj",
         "packagesPath": "C:\\Users\\Batch 12\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\obj\\",
+        "outputPath": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\LudoGame.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Batch 12\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -45,21 +45,19 @@
           "dependencies": {
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.13.0, )"
+              "version": "[17.8.0, )"
             },
-            "Moq": {
+            "coverlet.collector": {
               "target": "Package",
-              "version": "[4.20.72, )"
+              "version": "[6.0.0, )"
             },
             "xunit": {
               "target": "Package",
-              "version": "[2.9.3, )"
+              "version": "[2.5.3, )"
             },
             "xunit.runner.visualstudio": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
               "target": "Package",
-              "version": "[3.0.2, )"
+              "version": "[2.5.3, )"
             }
           },
           "imports": [

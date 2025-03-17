@@ -4,8 +4,10 @@
     using LudoGame.Controller;
     using LudoGame.Enums;
     using LudoGame.Interfaces;
+    using LudoGame.Struct;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     class Program
     {
@@ -18,9 +20,7 @@
             {
                 playerCount = display.GetIntInput("Enter the number of players (2-4): ");
                 if (playerCount < 2 || playerCount > 4)
-                {
                     display.DisplayMessage("Invalid input. Please enter a number between 2 and 4.");
-                }
             }
 
             Board board = new Board();
@@ -32,12 +32,9 @@
             for (int i = 0; i < playerCount; i++)
             {
                 string playerName = display.GetInput($"Enter name for Player {i + 1}: ");
-
                 display.DisplayMessage("Choose piece color:");
                 for (int j = 0; j < availableColors.Count; j++)
-                {
                     display.DisplayMessage($"{j + 1}. {availableColors[j]}");
-                }
 
                 int colorIndex;
                 while (true)
@@ -47,9 +44,20 @@
                         break;
                     display.DisplayMessage("❌ Invalid choice. Please select from the available colors.");
                 }
-
                 PieceColor chosenColor = availableColors[colorIndex - 1];
-                players.Add(new Player(playerName, chosenColor, board));
+
+                Position[] homePositions = new Position[4];
+                for (int j = 0; j < 4; j++)
+                {
+                    Square homeSq = board.GetHomeSquare(chosenColor, j);
+                    homePositions[j] = homeSq.Pos;
+                }
+                Player newPlayer = new Player(playerName, chosenColor, homePositions);
+                players.Add(newPlayer);
+                
+                foreach (var piece in newPlayer.Pieces)
+                    board.RegisterPieceAtHome(piece);
+
                 availableColors.RemoveAt(colorIndex - 1);
             }
 
@@ -57,30 +65,18 @@
             GameController gameController = new GameController(players, dice, board);
             gameController.state = GameState.PLAYING;
             gameController.OnDiceRoll = (d) => d.Roll();
-            gameController.OnNextPlayerTurn = (player) =>
-            {
-                display.DisplayMessage($"\n🔄 It's now {player.Name}'s turn ({player.Color})!");
-            };
+            gameController.OnNextPlayerTurn = (player) => display.DisplayMessage($"\n🔄 It's now {player.Name}'s turn ({player.Color})!");
             gameController.OnSixRoll = (player, piece, rollResult) =>
             {
                 display.DisplayMessage($"🎉 {player.Name} rolled a 6!");
                 if (piece.Status == PieceStatus.AT_HOME)
-                {
                     display.DisplayMessage("🏠 Bringing a piece out of home!");
-                }
             };
 
             while (true)
             {
                 Player currentPlayer = gameController.currentPlayer;
                 display.DisplayMessage($"\nIt's {currentPlayer.Name}'s turn ({currentPlayer.Color})!");
-
-                if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
-                {
-                    display.DisplayMessage($"🚀 {currentPlayer.Name} has finished! Skipping their turn.");
-                    gameController.NextPlayerTurn();
-                    continue; 
-                }
 
                 bool continueRolling;
                 do
@@ -107,7 +103,9 @@
                     }
 
                     Piece selectedPiece;
-                    while (true)
+                    bool validMoveSelected = false;
+
+                    while (!validMoveSelected)
                     {
                         int selectedIndex = display.GetIntInput("Select a piece to move (1-4): ");
                         if (selectedIndex < 1 || selectedIndex > 4)
@@ -115,24 +113,16 @@
                             display.DisplayMessage("❌ Invalid selection. Try again.");
                             continue;
                         }
+
                         selectedPiece = currentPlayer.Pieces[selectedIndex - 1];
 
-                        if ((selectedPiece.Status == PieceStatus.AT_HOME && rollValue < 6 && gameController.HasPieceInPlay(currentPlayer)) || (selectedPiece.Status == PieceStatus.AT_GOAL))
+                        if (!gameController.CanMovePiece(selectedPiece, rollValue))
                         {
-                            display.DisplayMessage("❌ Invalid move! Choose a piece that is already in play.");
+                            display.DisplayMessage("❌ Invalid move! Choose a piece that can actually move.");
                             continue;
                         }
-                        break;
-                    }
 
-                    if (rollValue == 6)
-                    {
-                        gameController.HandleSixRoll(selectedPiece, rollValue);
-                        gameController.MovePiece(selectedPiece, rollValue);
-                        continueRolling = true; 
-                    }
-                    else
-                    {
+                        validMoveSelected = true;
                         gameController.MovePiece(selectedPiece, rollValue);
                     }
 
@@ -146,15 +136,17 @@
 
                     if (gameController.state == GameState.FINISHED)
                     {
-                        display.DisplayMessage("Game Finished! You Last Player LOSES👎!!!");    
-                        Environment.Exit(0);   
+                        display.DisplayMessage("Game Finished! You Last Player LOSES 👎!!!");
+                        Environment.Exit(0);
                     }
+
+                    if (rollValue == 6)
+                        continueRolling = true;
 
                 } while (continueRolling);
 
                 gameController.NextPlayerTurn();
-                
-            } 
+            }
         }
     }
 }
