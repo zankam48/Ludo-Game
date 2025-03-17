@@ -7,7 +7,17 @@ namespace LudoGame.Classes
     {
         public void DisplayBoard(Board board)
         {
-            board.PrintBoard();
+            // board.PrintBoard();
+            const int BOARD_SIZE = 15;
+            for (int r = 0; r < BOARD_SIZE; r++)
+            {
+                for (int c = 0; c < BOARD_SIZE; c++)
+                {
+                    Console.Write(board.grid[r, c].Occupant + " ");
+                }
+                Console.WriteLine();
+    
+            }
         }
 
         public void DisplayMessage(string message)

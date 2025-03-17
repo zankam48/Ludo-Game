@@ -55,7 +55,7 @@
 
             Dice dice = new Dice();
             GameController gameController = new GameController(players, dice, board);
-
+            gameController.state = GameState.PLAYING;
             gameController.OnDiceRoll = (d) => d.Roll();
             gameController.OnNextPlayerTurn = (player) =>
             {
@@ -86,6 +86,8 @@
                 do
                 {
                     continueRolling = false;
+                    display.DisplayMessage("🎲 Press any key to roll the dice...");
+                    Console.ReadKey(true);
                     // int rollValue = gameController.RollDice();
                     int rollValue = Convert.ToInt32(Console.ReadLine());
                     display.DisplayMessage($"🎲 {currentPlayer.Name} rolled a {rollValue}.");
@@ -142,10 +144,17 @@
                         gameController.NextPlayerTurn();
                     }
 
+                    if (gameController.state == GameState.FINISHED)
+                    {
+                        display.DisplayMessage("Game Finished! You Last Player LOSES👎!!!");    
+                        Environment.Exit(0);   
+                    }
+
                 } while (continueRolling);
 
                 gameController.NextPlayerTurn();
-            }
+                
+            } 
         }
     }
 }

@@ -2,7 +2,6 @@ namespace LudoGame.Controller;
 using LudoGame.Interfaces;
 using LudoGame.Classes;
 using LudoGame.Enums;
-// public delegate void HandleSixRollDelegate(IPlayer player, IPiece piece, int rollResult);
 
 public class GameController
     {
@@ -10,6 +9,7 @@ public class GameController
         private Dice dice;
         private Board board;
         public Player currentPlayer;
+        public GameState state;
         public int currentPlayerIndex;
 
         public Func<Dice, int> OnDiceRoll;
@@ -22,6 +22,7 @@ public class GameController
             this.players = players;
             this.dice = dice;
             this.board = board;
+            this.state = GameState.NOT_STARTED;
             currentPlayerIndex = 0;
             currentPlayer = players[currentPlayerIndex];
         }
@@ -205,10 +206,7 @@ public class GameController
 
                 if (GetRemainingPlayers() == 1)
                 {
-                    // last remaining player
-                    Player loser = players.First(p => p.Pieces.Any(piece => piece.Status != PieceStatus.AT_GOAL));
-                    Console.WriteLine($"🔥 {loser.Name} ({loser.Color}) is the last player left and LOSES!");
-                    Environment.Exit(0); 
+                    this.state = GameState.FINISHED; 
                 }
 
                 break; 
@@ -221,8 +219,6 @@ public class GameController
 
         public int RollDice()
         {
-            Console.WriteLine("🎲 Press any key to roll the dice...");
-            Console.ReadKey(true);
             return OnDiceRoll != null ? OnDiceRoll(dice) : dice.Roll();
         }
 

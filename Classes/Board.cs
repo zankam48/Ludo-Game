@@ -5,7 +5,7 @@ public class Board
     {
         public const int BOARD_SIZE = 15;
 
-        private Square[,] grid;
+        public Square[,] grid;
 
         public Dictionary<Square, List<Piece>> piecePositions;
 
@@ -34,7 +34,6 @@ public class Board
             MarkSafeZones(safeCoords);
             PathManager = new PathManager(this);
             InitializePathVisuals();
-            AssignHomes();
         }
 
         
@@ -154,10 +153,6 @@ public class Board
         }
 
 
-        private void AssignHomes()
-        {
-        }
-
         public bool IsHomeSquare(Square sq)
         {
             int r = sq.Row, c = sq.Col;
@@ -234,16 +229,4 @@ public class Board
             }
         }
 
-
-        public void PrintBoard()
-        {
-            for (int r = 0; r < BOARD_SIZE; r++)
-            {
-                for (int c = 0; c < BOARD_SIZE; c++)
-                {
-                    Console.Write(grid[r, c].Occupant + " ");
-                }
-                Console.WriteLine();
-            }
-        }
     }
