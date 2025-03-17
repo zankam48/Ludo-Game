@@ -131,7 +131,6 @@
                     if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
                     {
                         display.DisplayMessage($"🎉 {currentPlayer.Name} has finished all pieces!");
-                        gameController.NextPlayerTurn();
                     }
 
                     if (gameController.state == GameState.FINISHED)
