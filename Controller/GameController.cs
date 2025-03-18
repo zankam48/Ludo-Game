@@ -41,9 +41,17 @@ public class GameController
         state = GameState.FINISHED;
     }
 
-    public void SelectPiece(IPiece piece)
+    public PieceColor SelectPiece(int pieceIndex)
     {
-
+        switch(pieceIndex)
+        {
+            case 0: return PieceColor.RED;
+            case 1: return PieceColor.BLUE;
+            case 2: return PieceColor.YELLOW;
+            case 3: return PieceColor.GREEN;
+            default: throw new ArgumentOutOfRangeException(nameof(pieceIndex), "Invalid piece index.");
+            
+        }
     }
 
     public void ExecuteTurn()
