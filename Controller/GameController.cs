@@ -192,9 +192,13 @@ public class GameController
         if (board.safeCoords.Contains((targetSquare.Row, targetSquare.Col)))
             return;
 
-        List<Piece> piecesOnSquare = board.GetPiecesOnSquare(targetSquare);
-        foreach (var occupant in piecesOnSquare.Where(p => p.Color != movingPiece.Color).ToList())
-            KickPiece(occupant);
+        if (board.piecePositions.TryGetValue(targetSquare.Pos, out List<Piece> piecesOnSquare))
+        {
+            foreach (var occupant in piecesOnSquare.Where(p => p.Color != movingPiece.Color).ToList())
+            {
+                KickPiece(occupant);
+            }
+        }
     }
 
 
