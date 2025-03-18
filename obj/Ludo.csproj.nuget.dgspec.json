@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj": {}
+    "D:\\Coding Project\\Zankam\\Ludo\\Ludo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj": {
+    "D:\\Coding Project\\Zankam\\Ludo\\Ludo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj",
+        "projectUniqueName": "D:\\Coding Project\\Zankam\\Ludo\\Ludo.csproj",
         "projectName": "Ludo",
-        "projectPath": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\Ludo.csproj",
-        "packagesPath": "C:\\Users\\Batch 12\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Batch 12\\Documents\\Zankam\\Ludo-Game\\obj\\",
+        "projectPath": "D:\\Coding Project\\Zankam\\Ludo\\Ludo.csproj",
+        "packagesPath": "C:\\Users\\mznhk\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding Project\\Zankam\\Ludo\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Batch 12\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\mznhk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -37,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -58,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

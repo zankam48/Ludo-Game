@@ -138,7 +138,16 @@
 
                         if (gameController.state == GameState.FINISHED)
                         {
-                            display.DisplayMessage("Game Finished! You Last Player LOSES 👎!!!");
+                            display.DisplayMessage("\n🎉 Game Over! Here are the final rankings :\n");
+                            List<Player> ranking = gameController.GetWinner();
+
+                            for (int i=0; i<ranking.Count-1; i++)
+                            {
+                                display.DisplayMessage($"🏆 Rank {i + 1}: {ranking[i].Name} ({ranking[i].Color}) - Score: {ranking[i].Score}");
+                            }
+
+                            Player lastPlayer = ranking.Last();
+                            display.DisplayMessage($"💀 {lastPlayer.Name} ({lastPlayer.Color}) LOSES the game!");
                             Environment.Exit(0);
                         }
 

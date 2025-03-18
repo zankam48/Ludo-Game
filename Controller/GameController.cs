@@ -73,6 +73,18 @@ public class GameController
         }
         return false;
     }
+
+    public List<Player> GetWinner()
+    {
+        foreach (var player in players)
+        {
+            player.AddScore(); 
+        }
+        List<Player> rankedPlayers = players.OrderByDescending(p => p.GetScore()).ToList();
+
+        return rankedPlayers;
+    }
+
   
     public bool CanMovePiece(Piece piece, int diceValue)
     {
@@ -202,14 +214,6 @@ public class GameController
         return players.Count(p => p.Pieces.Any(piece => piece.Status != PieceStatus.AT_GOAL));
     }
 
-    public Player? GetWinner()
-    {
-        foreach (var player in players)
-            if (player.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
-                return player;
-        return null;
-    }
-
 
     public void HandleSixRoll(IPiece piece, int rollResult)
     {
@@ -221,7 +225,7 @@ public class GameController
     {
         if (GetRemainingPlayers() == 1)
         {
-            this.state = GameState.FINISHED;
+            EndGame();
             return;
         }
         do
