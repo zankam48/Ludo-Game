@@ -77,6 +77,7 @@
             {
                 Player currentPlayer = gameController.currentPlayer;
                 display.DisplayMessage($"\nIt's {currentPlayer.Name}'s turn ({currentPlayer.Color})!");
+                bool triggerNext = false;
 
                 bool continueRolling;
                 do
@@ -131,6 +132,8 @@
                     if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
                     {
                         display.DisplayMessage($"🎉 {currentPlayer.Name} has finished all pieces!");
+                        gameController.NextPlayerTurn();
+                        triggerNext = true;
                     }
 
                     if (gameController.state == GameState.FINISHED)
@@ -143,8 +146,11 @@
                         continueRolling = true;
 
                 } while (continueRolling);
+                
+                if (!triggerNext){
+                    gameController.NextPlayerTurn();
+                }
 
-                gameController.NextPlayerTurn();
             }
         }
     }

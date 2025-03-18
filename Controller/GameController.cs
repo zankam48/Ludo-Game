@@ -30,6 +30,27 @@ public class GameController
         currentPlayer = players[currentPlayerIndex];
     }
 
+    public void StartGame()
+    {
+        state = GameState.PLAYING;
+
+    }
+
+    public void EndGame()
+    {
+        state = GameState.FINISHED;
+    }
+
+    public void SelectPiece(IPiece piece)
+    {
+
+    }
+
+    public void ExecuteTurn()
+    {
+
+    }
+
     public string GetPieceStatus(IPiece piece)
     {
         if (piece.Status == PieceStatus.AT_HOME) return "At Home";
@@ -46,14 +67,6 @@ public class GameController
         }
         return false;
     }
-
-    // public bool HasPieceInPlay(Player player)
-    // {
-    //     foreach (var piece in player.Pieces)
-    //         if (piece.Status == PieceStatus.IN_PLAY)
-    //             return true;
-    //     return false;
-    // }
   
     public bool CanMovePiece(Piece piece, int diceValue)
     {

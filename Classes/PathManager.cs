@@ -1,16 +1,18 @@
 namespace LudoGame.Classes;
 using LudoGame.Enums;
+using System;
+using System.Collections.Generic;
 
 public class PathManager
     {
-        private Board board;
+        private readonly Func<int, int, Square> getSquare;
         private Path fullPath;
         private Dictionary<PieceColor, Path> mainPaths;
         private Dictionary<PieceColor, Path> goalPaths;
 
-        public PathManager(Board board)
+        public PathManager(Func<int, int, Square> getSquareFunc)
         {
-            this.board = board;
+            getSquare = getSquareFunc;
             fullPath = new Path();
             mainPaths = new Dictionary<PieceColor, Path>();
             goalPaths = new Dictionary<PieceColor, Path>();
@@ -33,7 +35,7 @@ public class PathManager
 
             foreach (var (r, c) in coordinates)
             {
-                Square sq = board.GetSquare(r, c);
+                Square sq = getSquare(r, c);
                 fullPath.AddSquare(sq);
             }
         }
@@ -68,7 +70,7 @@ public class PathManager
             string redDot = "\u001b[31m.\u001b[0m";
             foreach (var (r, c) in redGoalCoords)
             {
-                Square sq = board.GetSquare(r, c);
+                Square sq = getSquare(r, c);
                 redGoal.AddSquare(sq);
                 sq.Occupant = redDot;
                 sq.BaseMarker = redDot;
@@ -84,7 +86,7 @@ public class PathManager
             string greenDot = "\u001b[32m.\u001b[0m";
             foreach (var (r, c) in greenGoalCoords)
             {
-                Square sq = board.GetSquare(r, c);
+                Square sq = getSquare(r, c);
                 greenGoal.AddSquare(sq);
                 sq.Occupant = greenDot;
                 sq.BaseMarker = greenDot;
@@ -100,7 +102,7 @@ public class PathManager
             string yellowDot = "\u001b[33m.\u001b[0m";
             foreach (var (r, c) in yellowGoalCoords)
             {
-                Square sq = board.GetSquare(r, c);
+                Square sq = getSquare(r, c);
                 yellowGoal.AddSquare(sq);
                 sq.Occupant = yellowDot;
                 sq.BaseMarker = yellowDot;
@@ -116,7 +118,7 @@ public class PathManager
             string blueDot = "\u001b[34m.\u001b[0m";
             foreach (var (r, c) in blueGoalCoords)
             {
-                Square sq = board.GetSquare(r, c);
+                Square sq = getSquare(r, c);
                 blueGoal.AddSquare(sq);
                 sq.Occupant = blueDot;
                 sq.BaseMarker = blueDot;
@@ -128,3 +130,4 @@ public class PathManager
         public Path GetMainPath(PieceColor color) => mainPaths[color];
         public Path GetGoalPath(PieceColor color) => goalPaths[color];
     }
+

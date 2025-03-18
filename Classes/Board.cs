@@ -30,7 +30,7 @@ public class Board
 
         MarkEdges();
         MarkSafeZones(safeCoords);
-        PathManager = new PathManager(this);
+        PathManager = new PathManager((r, c) => GetSquare(r, c));
         InitializePathVisuals();
     }
 
