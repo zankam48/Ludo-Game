@@ -36,10 +36,13 @@ public class GameController
 
     }
 
-    public void EndGame()
-    {
-        state = GameState.FINISHED;
-    }
+    // public void EndGame()
+    // {
+    //     state = GameState.FINISHED;
+    //     Player loser = players[lastplayerindex];
+    //     Player winners 
+    //     Shows the winners within the order of finished all of their pieces
+    // }
 
     public PieceColor SelectPiece(int pieceIndex)
     {
@@ -56,7 +59,7 @@ public class GameController
 
     public void ExecuteTurn()
     {
-
+        
     }
 
     public string GetPieceStatus(IPiece piece)

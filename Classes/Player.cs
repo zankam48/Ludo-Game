@@ -30,4 +30,20 @@ public class Player : IPlayer
             Pieces[i] = new Piece(color, marker, homePositions[i]);
         }
     }
+
+    public void AddScore()
+    {
+        foreach (Piece piece in Pieces)
+        {
+            if (piece.Status == PieceStatus.AT_GOAL)
+            {
+                Score++;
+            }
+        }
+    }
+
+    public int GetScore()
+    {
+        return Score;
+    }
 }
