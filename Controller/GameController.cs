@@ -25,7 +25,7 @@ public class GameController
         this.players = players;
         this.dice = dice;
         this.board = board;
-        this.state = GameState.NOT_STARTED;
+        state = GameState.NOT_STARTED;
         currentPlayerIndex = 0;
         currentPlayer = players[currentPlayerIndex];
     }
@@ -33,34 +33,29 @@ public class GameController
     public void StartGame()
     {
         state = GameState.PLAYING;
+        currentPlayerIndex = 0;
+        currentPlayer = players[currentPlayerIndex];
+        OnNextPlayerTurn?.Invoke(currentPlayer);
 
     }
 
-    // public void EndGame()
-    // {
-    //     state = GameState.FINISHED;
-    //     Player loser = players[lastplayerindex];
-    //     Player winners 
-    //     Shows the winners within the order of finished all of their pieces
-    // }
-
-    public PieceColor SelectPiece(int pieceIndex)
+    public void EndGame()
     {
-        switch(pieceIndex)
-        {
-            case 0: return PieceColor.RED;
-            case 1: return PieceColor.BLUE;
-            case 2: return PieceColor.YELLOW;
-            case 3: return PieceColor.GREEN;
-            default: throw new ArgumentOutOfRangeException(nameof(pieceIndex), "Invalid piece index.");
-            
-        }
+        state = GameState.FINISHED;
     }
 
-    public void ExecuteTurn()
+    public Piece? SelectPiece(Player player, int pieceIndex, int diceValue)
     {
+        if (pieceIndex < 0 || pieceIndex >= player.Pieces.Length) 
+            return null;
+
+        Piece piece = player.Pieces[pieceIndex];
+        if (!CanMovePiece(piece, diceValue)) 
+            return null;
         
+        return piece;
     }
+
 
     public string GetPieceStatus(IPiece piece)
     {
@@ -89,7 +84,7 @@ public class GameController
 
         if (piece.Status == PieceStatus.AT_HOME)
         {
-            return (diceValue == 6);
+            return diceValue == 6;
         }
 
         if (piece.Status == PieceStatus.IN_PLAY)
