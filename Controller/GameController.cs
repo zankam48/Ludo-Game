@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class GameController
 {
     private List<Player> players;
-    private Dice dice;
+    private IDice dice;
     private Board board;
     public Player currentPlayer;
     public GameState state;
@@ -20,14 +20,16 @@ public class GameController
     public delegate void HandleSixRollDelegate(Player player, IPiece piece, int rollResult);
     public HandleSixRollDelegate OnSixRoll;
 
-    public GameController(List<Player> players, Dice dice, Board board)
+    public GameController(List<Player> players, IDice dice, Board board)
     {
         this.players = players;
-        this.dice = dice;
+        this.dice = dice;  
         this.board = board;
         state = GameState.NOT_STARTED;
         currentPlayerIndex = 0;
         currentPlayer = players[currentPlayerIndex];
+        // pake interface idice iboard
+        // pake array instead of list, kl gk inumerable
     }
 
     public void StartGame()
@@ -39,6 +41,7 @@ public class GameController
 
     }
 
+    // play again
     public void EndGame()
     {
         state = GameState.FINISHED;
@@ -57,6 +60,9 @@ public class GameController
     }
 
 
+    // jgn pake hardcode string, return enum pake to string
+    // enum pake attribute (ada spasinya)
+    // bs juga extensions method
     public string GetPieceStatus(IPiece piece)
     {
         if (piece.Status == PieceStatus.AT_HOME) return "At Home";
@@ -196,7 +202,7 @@ public class GameController
     {
         if (targetSquare == null) return;
 
-        if (board.safeCoords.Contains((targetSquare.Row, targetSquare.Col)))
+        if (board.safeCoords.Contains(targetSquare.Pos))
             return;
 
         if (board.piecePositions.TryGetValue(targetSquare.Pos, out List<Piece> piecesOnSquare))
@@ -247,7 +253,7 @@ public class GameController
 
     public int RollDice()
     {
-        return OnDiceRoll != null ? OnDiceRoll(dice) : dice.Roll();
+        return OnDiceRoll != null ? OnDiceRoll((Dice)dice) : dice.Roll();
     }
 }
 

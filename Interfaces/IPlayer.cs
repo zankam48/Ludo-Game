@@ -6,6 +6,6 @@ public interface IPlayer
     string Name { get; }
     PieceColor Color { get; }
     Piece[] Pieces { get; }
-    int Score { get; }
+    // int Score { get; }
 
 }

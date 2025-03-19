@@ -85,8 +85,8 @@
                         continueRolling = false;
                         display.DisplayMessage("🎲 Press any key to roll the dice...");
                         Console.ReadKey(true);
-                        // int rollValue = gameController.RollDice();
-                        int rollValue = Convert.ToInt32(Console.ReadLine());
+                        int rollValue = gameController.RollDice();
+                        // int rollValue = Convert.ToInt32(Console.ReadLine());
                         display.DisplayMessage($"🎲 {currentPlayer.Name} rolled a {rollValue}.");
 
                         if (!gameController.CanPlayerMove(currentPlayer, rollValue))
