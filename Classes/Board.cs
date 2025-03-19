@@ -10,11 +10,13 @@ public class Board
     public Square[,] grid;
     public Dictionary<Position, List<Piece>> piecePositions;
     public PathManager PathManager { get; private set; }
-    // tuple agak ambigu, pake struct aja int,int
     public List<Position> safeCoords = new List<Position>
     {
-        new Position(13,6), new Position(12,8), new Position(8,13), new Position(6,12), new Position(1,8), new Position(2,6), new Position(6,1), new Position(8,2)
+        new Position(13,6), new Position(12,8), new Position(8,13), new Position(6,12), 
+        new Position(1,8), new Position(2,6), new Position(6,1), new Position(8,2)
     };
+
+    public Action<Piece> KickPieceDelegate { get; set; }
 
     public Board()
     {
@@ -73,6 +75,24 @@ public class Board
         }
         return null;
     }
+
+    public void HandleCollision(Piece movingPiece, Square targetSquare)
+    {
+        if (targetSquare == null) return;
+
+        if (safeCoords.Contains(targetSquare.Pos))
+            return;
+
+        if (piecePositions.TryGetValue(targetSquare.Pos, out List<Piece> piecesOnSquare))
+        {
+            foreach (var occupant in piecesOnSquare.Where(p => p.Color != movingPiece.Color).ToList())
+            {
+                KickPieceDelegate?.Invoke(occupant);
+            }
+        }
+    }
+
+    
 
     public void RegisterPieceAtHome(Piece piece)
     {

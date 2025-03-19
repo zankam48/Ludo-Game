@@ -28,8 +28,6 @@ public class GameController
         state = GameState.NOT_STARTED;
         currentPlayerIndex = 0;
         currentPlayer = players[currentPlayerIndex];
-        // pake interface idice iboard
-        // pake array instead of list, kl gk inumerable
     }
 
     public void StartGame()
@@ -59,10 +57,6 @@ public class GameController
         return piece;
     }
 
-
-    // jgn pake hardcode string, return enum pake to string
-    // enum pake attribute (ada spasinya)
-    // bs juga extensions method
     public string GetPieceStatus(IPiece piece)
     {
         if (piece.Status == PieceStatus.AT_HOME) return PieceStatus.AT_HOME.ToString();
@@ -130,14 +124,14 @@ public class GameController
     {
         Piece piece = ipiece as Piece;
         if (piece == null) return;  
-
+        board.KickPieceDelegate = KickPiece;
 
         if (piece.Status == PieceStatus.AT_HOME)
         {
             Path mainPath = board.PathManager.GetMainPath(piece.Color);
             Square startSquare = mainPath.GetSquare(0);
 
-            HandleCollision(piece, startSquare, board);
+            board.HandleCollision(piece, startSquare);
 
             Square oldHomeSquare = board.GetSquare(piece.HomePosition.Row, piece.HomePosition.Column);
             board.UpdatePiecePosition(piece, oldHomeSquare, startSquare);
@@ -176,7 +170,7 @@ public class GameController
                 }
             }
 
-            HandleCollision(piece, newSquare, board);
+            board.HandleCollision(piece, newSquare);
 
             board.UpdatePiecePosition(piece, oldSquare, newSquare);
 
@@ -184,6 +178,7 @@ public class GameController
             piece.Steps = newSteps;
         }
     }
+
 
     public void KickPiece(Piece occupant)
     {
@@ -195,23 +190,6 @@ public class GameController
         occupant.Position = homeSquare.Pos;
         occupant.Status = PieceStatus.AT_HOME;
         occupant.Steps = 0;
-    }
-
-
-    public void HandleCollision(Piece movingPiece, Square targetSquare, Board board)
-    {
-        if (targetSquare == null) return;
-
-        if (board.safeCoords.Contains(targetSquare.Pos))
-            return;
-
-        if (board.piecePositions.TryGetValue(targetSquare.Pos, out List<Piece> piecesOnSquare))
-        {
-            foreach (var occupant in piecesOnSquare.Where(p => p.Color != movingPiece.Color).ToList())
-            {
-                KickPiece(occupant);
-            }
-        }
     }
 
 
@@ -241,8 +219,6 @@ public class GameController
 
             if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
                 continue;
-
-            
 
             break;
         } 
