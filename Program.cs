@@ -26,7 +26,7 @@
                 Board board = new Board();
                 display.DisplayBoard(board);
 
-                List<Player> players = new List<Player>();
+                IPlayer[] players = new IPlayer[playerCount];
                 List<PieceColor> availableColors = new List<PieceColor> { PieceColor.RED, PieceColor.BLUE, PieceColor.YELLOW, PieceColor.GREEN };
 
                 for (int i = 0; i < playerCount; i++)
@@ -52,8 +52,8 @@
                         Square homeSq = board.GetHomeSquare(chosenColor, j);
                         homePositions[j] = homeSq.Pos;
                     }
-                    Player newPlayer = new Player(playerName, chosenColor, homePositions);
-                    players.Add(newPlayer);
+                    IPlayer newPlayer = new Player(playerName, chosenColor, homePositions);
+                    players[i] = newPlayer;
                     
                     foreach (var piece in newPlayer.Pieces)
                         board.RegisterPieceAtHome(piece);
@@ -75,7 +75,7 @@
 
                 while (true)
                 {
-                    Player currentPlayer = gameController.currentPlayer;
+                    IPlayer currentPlayer = gameController.currentPlayer;
                     display.DisplayMessage($"\nIt's {currentPlayer.Name}'s turn ({currentPlayer.Color})!");
                     bool triggerNext = false;
 
@@ -139,14 +139,14 @@
                         if (gameController.state == GameState.FINISHED)
                         {
                             display.DisplayMessage("\n🎉 Game Over! Here are the final rankings :\n");
-                            List<Player> ranking = gameController.GetWinner();
+                            IPlayer[] ranking = gameController.GetWinner();
 
-                            for (int i=0; i<ranking.Count-1; i++)
+                            for (int i=0; i<ranking.Length; i++)
                             {
                                 display.DisplayMessage($"🏆 Rank {i + 1}: {ranking[i].Name} ({ranking[i].Color}) - Score: {ranking[i].Score}");
                             }
 
-                            Player lastPlayer = ranking.Last();
+                            IPlayer lastPlayer = ranking[ranking.Length - 1];
                             display.DisplayMessage($"💀 {lastPlayer.Name} ({lastPlayer.Color}) LOSES the game!");
                             Environment.Exit(0);
                         }

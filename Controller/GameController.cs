@@ -8,19 +8,19 @@ using System.Collections.Generic;
 
 public class GameController
 {
-    private List<Player> players;
+    private IPlayer[] players;
     private IDice dice;
     private Board board;
-    public Player currentPlayer;
+    public IPlayer currentPlayer;
     public GameState state;
     public int currentPlayerIndex;
 
     public Func<Dice, int> OnDiceRoll;
-    public Action<Player> OnNextPlayerTurn;
-    public delegate void HandleSixRollDelegate(Player player, IPiece piece, int rollResult);
+    public Action<IPlayer> OnNextPlayerTurn;
+    public delegate void HandleSixRollDelegate(IPlayer player, IPiece piece, int rollResult);
     public HandleSixRollDelegate OnSixRoll;
 
-    public GameController(List<Player> players, IDice dice, Board board)
+    public GameController(IPlayer[] players, IDice dice, Board board)
     {
         this.players = players;
         this.dice = dice;  
@@ -47,7 +47,7 @@ public class GameController
         state = GameState.FINISHED;
     }
 
-    public Piece? SelectPiece(Player player, int pieceIndex, int diceValue)
+    public Piece? SelectPiece(IPlayer player, int pieceIndex, int diceValue)
     {
         if (pieceIndex < 0 || pieceIndex >= player.Pieces.Length) 
             return null;
@@ -65,12 +65,12 @@ public class GameController
     // bs juga extensions method
     public string GetPieceStatus(IPiece piece)
     {
-        if (piece.Status == PieceStatus.AT_HOME) return "At Home";
-        if (piece.Status == PieceStatus.AT_GOAL) return "At Goal";
-        return $"At ({piece.Position.Row},{piece.Position.Column})";
+        if (piece.Status == PieceStatus.AT_HOME) return PieceStatus.AT_HOME.ToString();
+        if (piece.Status == PieceStatus.AT_GOAL) return PieceStatus.AT_GOAL.ToString();
+        return (piece.Position.Row, piece.Position.Column).ToString();
     }
 
-    public bool CanPlayerMove(Player player, int rollValue)
+    public bool CanPlayerMove(IPlayer player, int rollValue)
     {
         foreach (var piece in player.Pieces)
         {
@@ -80,19 +80,19 @@ public class GameController
         return false;
     }
 
-    public List<Player> GetWinner()
+    public IPlayer[] GetWinner()
     {
         foreach (var player in players)
         {
             player.AddScore(); 
         }
-        List<Player> rankedPlayers = players.OrderByDescending(p => p.GetScore()).ToList();
+        IPlayer[] rankedPlayers = players.OrderByDescending(p => p.GetScore()).ToArray();
 
         return rankedPlayers;
     }
 
   
-    public bool CanMovePiece(Piece piece, int diceValue)
+    public bool CanMovePiece(IPiece piece, int diceValue)
     {
         if (piece.Color != currentPlayer.Color) 
             return false;
@@ -236,7 +236,7 @@ public class GameController
         }
         do
         {
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
             currentPlayer = players[currentPlayerIndex];
 
             if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
