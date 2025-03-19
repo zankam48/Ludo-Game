@@ -6,21 +6,22 @@ using System.Collections.Generic;
 
 public class Board
 {
-    public const int BOARD_SIZE = 15;
+    public const int BoardSize = 15;
     public Square[,] grid;
     public Dictionary<Position, List<Piece>> piecePositions;
     public PathManager PathManager { get; private set; }
-    public List<(int, int)> safeCoords = new List<(int, int)>
+    // tuple agak ambigu, pake struct aja int,int
+    public List<Position> safeCoords = new List<Position>
     {
-        (13,6), (12,8), (8,13), (6,12), (1,8), (2,6), (6,1), (8,2)
+        new Position(13,6), new Position(12,8), new Position(8,13), new Position(6,12), new Position(1,8), new Position(2,6), new Position(6,1), new Position(8,2)
     };
 
     public Board()
     {
-        grid = new Square[BOARD_SIZE, BOARD_SIZE];
-        for (int r = 0; r < BOARD_SIZE; r++)
+        grid = new Square[BoardSize, BoardSize];
+        for (int r = 0; r < BoardSize; r++)
         {
-            for (int c = 0; c < BOARD_SIZE; c++)
+            for (int c = 0; c < BoardSize; c++)
             {
                 grid[r, c] = new Square(r, c);
             }
@@ -36,7 +37,7 @@ public class Board
 
     public Square GetSquare(int row, int col)
     {
-        if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE)
+        if (row >= 0 && row < BoardSize && col >= 0 && col < BoardSize)
             return grid[row, col];
         return null;
     }
@@ -94,27 +95,27 @@ public class Board
 
     private void MarkEdges()
     {
-        for (int c = 0; c < BOARD_SIZE; c++)
+        for (int c = 0; c < BoardSize; c++)
         {
             GetSquare(0, c).Occupant = ".";
             GetSquare(0, c).BaseMarker = ".";
-            GetSquare(BOARD_SIZE - 1, c).Occupant = ".";
-            GetSquare(BOARD_SIZE - 1, c).BaseMarker = ".";
+            GetSquare(BoardSize - 1, c).Occupant = ".";
+            GetSquare(BoardSize - 1, c).BaseMarker = ".";
         }
-        for (int r = 0; r < BOARD_SIZE; r++)
+        for (int r = 0; r < BoardSize; r++)
         {
             GetSquare(r, 0).Occupant = ".";
             GetSquare(r, 0).BaseMarker = ".";
-            GetSquare(r, BOARD_SIZE - 1).Occupant = ".";
-            GetSquare(r, BOARD_SIZE - 1).BaseMarker = ".";
+            GetSquare(r, BoardSize - 1).Occupant = ".";
+            GetSquare(r, BoardSize - 1).BaseMarker = ".";
         }
     }
 
-    private void MarkSafeZones(List<(int, int)> safeCoords)
+    private void MarkSafeZones(List<Position> safeCoords)
     {
-        foreach (var (r, c) in safeCoords)
+        foreach (var pos in safeCoords)
         {
-            Square sq = GetSquare(r, c);
+            Square sq = GetSquare(pos.Row, pos.Column);
             if (sq != null)
             {
                 sq.Occupant = "*";
