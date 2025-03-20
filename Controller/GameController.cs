@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 public class GameController
 {
-    private IPlayer[] players;
-    private IDice dice;
-    private Board board;
+    private IPlayer[] _players;
+    private IDice _dice;
+    private Board _board;
     private IDisplay _display;
     public IPlayer currentPlayer;
     public GameState state;
@@ -23,20 +23,20 @@ public class GameController
 
     public GameController(IPlayer[] players, IDice dice, Board board, IDisplay display)
     {
-        this.players = players;
-        this.dice = dice;  
-        this.board = board;
+        _players = players;
+        _dice = dice;  
+        _board = board;
         _display = display;
         state = GameState.NOT_STARTED;
         currentPlayerIndex = 0;
-        currentPlayer = players[currentPlayerIndex];
+        currentPlayer = _players[currentPlayerIndex];
     }
 
     public void StartGame()
     {
         state = GameState.PLAYING;
         currentPlayerIndex = 0;
-        currentPlayer = players[currentPlayerIndex];
+        currentPlayer = _players[currentPlayerIndex];
         _display.DisplayMessage("Game Started!");
         OnDiceRoll = (d) => d.Roll();
         OnNextPlayerTurn = (player) => _display.DisplayMessage($"\n🔄 It's now {player.Name}'s turn ({player.Color})!");
@@ -47,6 +47,11 @@ public class GameController
                 _display.DisplayMessage("🏠 Bringing a piece out of home!");
         };
 
+        ExecuteTurn();
+    }
+
+    public void ExecuteTurn()
+    {
         while (true)
         {
             IPlayer currentPlayer = this.currentPlayer;
@@ -57,7 +62,7 @@ public class GameController
             do
             {
                 continueRolling = false;
-                _display.DisplayMessage("🎲 Press any key to roll the dice...");
+                _display.DisplayMessage("🎲 Press any key to roll the _dice...");
                 Display.InputKey(true);
                 // int rollValue = RollDice();
                 int rollValue = Convert.ToInt32(Console.ReadLine());
@@ -101,7 +106,7 @@ public class GameController
                     MovePiece(chosenPiece, rollValue);
                 }
 
-                _display.DisplayBoard(board);
+                _display.DisplayBoard(_board);
 
                 if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
                 {
@@ -133,9 +138,7 @@ public class GameController
             if (!triggerNext){
                 NextPlayerTurn();
             }
-
         }
-
     }
 
     // play again
@@ -180,11 +183,11 @@ public class GameController
 
     public IPlayer[] GetWinner()
     {
-        foreach (var player in players)
+        foreach (var player in _players)
         {
             player.AddScore(); 
         }
-        IPlayer[] rankedPlayers = players.OrderByDescending(p => p.GetScore()).ToArray();
+        IPlayer[] rankedPlayers = _players.OrderByDescending(p => p.GetScore()).ToArray();
 
         return rankedPlayers;
     }
@@ -207,8 +210,8 @@ public class GameController
         {
             int newSteps = piece.Steps + diceValue;
 
-            Path mainPath = board.PathManager.GetMainPath(piece.Color);
-            Path goalPath = board.PathManager.GetGoalPath(piece.Color);
+            Path mainPath = _board.PathManager.GetMainPath(piece.Color);
+            Path goalPath = _board.PathManager.GetGoalPath(piece.Color);
 
             int mainCount = mainPath.Count;   
             int goalCount = goalPath.Count;   
@@ -228,17 +231,17 @@ public class GameController
     {
         Piece piece = ipiece as Piece;
         if (piece == null) return;  
-        board.KickPieceDelegate = KickPiece;
+        _board.KickPieceDelegate = KickPiece;
 
         if (piece.Status == PieceStatus.AT_HOME)
         {
-            Path mainPath = board.PathManager.GetMainPath(piece.Color);
+            Path mainPath = _board.PathManager.GetMainPath(piece.Color);
             Square startSquare = mainPath.GetSquare(0);
 
-            board.HandleCollision(piece, startSquare);
+            _board.HandleCollision(piece, startSquare);
 
-            Square oldHomeSquare = board.GetSquare(piece.HomePosition.Row, piece.HomePosition.Column);
-            board.UpdatePiecePosition(piece, oldHomeSquare, startSquare);
+            Square oldHomeSquare = _board.GetSquare(piece.HomePosition.Row, piece.HomePosition.Column);
+            _board.UpdatePiecePosition(piece, oldHomeSquare, startSquare);
 
             piece.Position = startSquare.Pos;
             piece.Status = PieceStatus.IN_PLAY;
@@ -250,14 +253,14 @@ public class GameController
         {
             int newSteps = piece.Steps + diceValue;
 
-            Path mainPath = board.PathManager.GetMainPath(piece.Color);
-            Path goalPath = board.PathManager.GetGoalPath(piece.Color);
+            Path mainPath = _board.PathManager.GetMainPath(piece.Color);
+            Path goalPath = _board.PathManager.GetGoalPath(piece.Color);
 
             int mainCount = mainPath.Count;
             int goalCount = goalPath.Count;
             int total = mainCount + goalCount;
 
-            Square oldSquare = board.GetSquare(piece.Position.Row, piece.Position.Column);
+            Square oldSquare = _board.GetSquare(piece.Position.Row, piece.Position.Column);
             Square newSquare = null;
 
             if (newSteps < mainCount)
@@ -274,9 +277,9 @@ public class GameController
                 }
             }
 
-            board.HandleCollision(piece, newSquare);
+            _board.HandleCollision(piece, newSquare);
 
-            board.UpdatePiecePosition(piece, oldSquare, newSquare);
+            _board.UpdatePiecePosition(piece, oldSquare, newSquare);
 
             piece.Position = newSquare.Pos;
             piece.Steps = newSteps;
@@ -288,9 +291,9 @@ public class GameController
     {
         if (occupant == null) return;
 
-        Square oldSquare = board.GetSquare(occupant.Position.Row, occupant.Position.Column);
-        Square homeSquare = board.GetSquare(occupant.HomePosition.Row, occupant.HomePosition.Column);
-        board.UpdatePiecePosition(occupant, oldSquare, homeSquare);
+        Square oldSquare = _board.GetSquare(occupant.Position.Row, occupant.Position.Column);
+        Square homeSquare = _board.GetSquare(occupant.HomePosition.Row, occupant.HomePosition.Column);
+        _board.UpdatePiecePosition(occupant, oldSquare, homeSquare);
         occupant.Position = homeSquare.Pos;
         occupant.Status = PieceStatus.AT_HOME;
         occupant.Steps = 0;
@@ -299,7 +302,7 @@ public class GameController
 
     public int GetRemainingPlayers()
     {
-        return players.Count(p => p.Pieces.Any(piece => piece.Status != PieceStatus.AT_GOAL));
+        return _players.Count(p => p.Pieces.Any(piece => piece.Status != PieceStatus.AT_GOAL));
     }
 
 
@@ -318,8 +321,8 @@ public class GameController
         }
         do
         {
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
-            currentPlayer = players[currentPlayerIndex];
+            currentPlayerIndex = (currentPlayerIndex + 1) % _players.Length;
+            currentPlayer = _players[currentPlayerIndex];
 
             if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
                 continue;
@@ -333,7 +336,7 @@ public class GameController
 
     public int RollDice()
     {
-        return OnDiceRoll != null ? OnDiceRoll((Dice)dice) : dice.Roll();
+        return OnDiceRoll != null ? OnDiceRoll((Dice)_dice) : _dice.Roll();
     }
 }
 
