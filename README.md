@@ -35,24 +35,15 @@ Welcome to the Ludo Game, a classic board game implemented in C# with a console-
     dotnet run
     ```
 
-## 🎮 How to Play
 
-### 🎲 Game Flow
+## 🎲 Game Flow
 
 1.  Choose the number of players (2-4).
 2.  Each player selects a color (Red, Blue, Green, Yellow).
 3.  Players take turns rolling the dice (Press any key).
 4.  If a 6 is rolled, a piece can enter the board from home.
 5.  Move your pieces along your path to the goal.
-6.  Landing on an opponent’s piece? Kick them back home!
-7.  First player to move all 4 pieces to the goal wins!
 
-### 📜 Game Rules
-
--   Players can only move a piece if it’s not blocked.
--   Rolling a 6 grants an extra turn.
--   The last player remaining loses.
--   Safe zones protect pieces from being kicked.
 
 ## ⚙️ Game Mechanics & Code Overview
 
@@ -60,11 +51,11 @@ Welcome to the Ludo Game, a classic board game implemented in C# with a console-
 
 | Feature             | Code Implementation             |
 | ------------------- | ------------------------------- |
-| 🎲 Rolling Dice     | `RollDice()` in `GameController.cs` |
-| 🚶 Moving a Piece   | `MovePiece()` in `GameController.cs` |
-| 🔄 Next Player Turn | `NextPlayerTurn()` in `GameController.cs` |
-| 🏆 Winning Condition | `GetWinner()` in `GameController.cs` |
-| 🏠 Home & Goal Path | `PathManager.cs`                |
-| 🔥 Collision Handling | `HandleCollision()` in `Board.cs` |
+| - Rolling Dice     | `RollDice()` in `GameController.cs` |
+| - Moving a Piece   | `MovePiece()` in `GameController.cs` |
+| - Next Player Turn | `NextPlayerTurn()` in `GameController.cs` |
+| - Winning Condition | `GetWinner()` in `GameController.cs` |
+| - Home & Goal Path | `PathManager.cs`                |
+| - Collision Handling | `HandleCollision()` in `Board.cs` |
 
 
