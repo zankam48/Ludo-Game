@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 public class PathManager
     {
-        private readonly Func<int, int, Square> getSquare;
-        private Path fullPath;
-        private Dictionary<PieceColor, Path> mainPaths;
-        private Dictionary<PieceColor, Path> goalPaths;
+        private readonly Func<int, int, Square> _getSquare;
+        private Path _fullPath;
+        private Dictionary<PieceColor, Path> _mainPaths;
+        private Dictionary<PieceColor, Path> _goalPaths;
 
         public PathManager(Func<int, int, Square> getSquareFunc)
         {
-            getSquare = getSquareFunc;
-            fullPath = new Path();
-            mainPaths = new Dictionary<PieceColor, Path>();
-            goalPaths = new Dictionary<PieceColor, Path>();
+            _getSquare = getSquareFunc;
+            _fullPath = new Path();
+            _mainPaths = new Dictionary<PieceColor, Path>();
+            _goalPaths = new Dictionary<PieceColor, Path>();
 
             InitializeFullPath();
             InitializeMainPaths();
@@ -35,26 +35,26 @@ public class PathManager
 
             foreach (var (r, c) in coordinates)
             {
-                Square sq = getSquare(r, c);
-                fullPath.AddSquare(sq);
+                Square sq = _getSquare(r, c);
+                _fullPath.AddSquare(sq);
             }
         }
 
         private void InitializeMainPaths()
         {
-            mainPaths[PieceColor.RED] = GetWrappedPath(0);
-            mainPaths[PieceColor.GREEN] = GetWrappedPath(13);
-            mainPaths[PieceColor.YELLOW] = GetWrappedPath(26);
-            mainPaths[PieceColor.BLUE] = GetWrappedPath(39);
+            _mainPaths[PieceColor.RED] = GetWrappedPath(0);
+            _mainPaths[PieceColor.GREEN] = GetWrappedPath(13);
+            _mainPaths[PieceColor.YELLOW] = GetWrappedPath(26);
+            _mainPaths[PieceColor.BLUE] = GetWrappedPath(39);
         }
         private Path GetWrappedPath(int startIndex)
         {
             Path path = new Path();
-            int total = fullPath.Count;
+            int total = _fullPath.Count;
             for (int i = 0; i < total; i++)
             {
                 int idx = (startIndex + i) % total;
-                path.AddSquare(fullPath.GetSquare(idx));
+                path.AddSquare(_fullPath.GetSquare(idx));
             }
             return path;
         }
@@ -70,12 +70,12 @@ public class PathManager
             string redDot = "\u001b[31m.\u001b[0m";
             foreach (var (r, c) in redGoalCoords)
             {
-                Square sq = getSquare(r, c);
+                Square sq = _getSquare(r, c);
                 redGoal.AddSquare(sq);
                 sq.Occupant = redDot;
                 sq.BaseMarker = redDot;
             }
-            goalPaths[PieceColor.RED] = redGoal;
+            _goalPaths[PieceColor.RED] = redGoal;
 
             // Green goal path
             Path greenGoal = new Path();
@@ -86,12 +86,12 @@ public class PathManager
             string greenDot = "\u001b[32m.\u001b[0m";
             foreach (var (r, c) in greenGoalCoords)
             {
-                Square sq = getSquare(r, c);
+                Square sq = _getSquare(r, c);
                 greenGoal.AddSquare(sq);
                 sq.Occupant = greenDot;
                 sq.BaseMarker = greenDot;
             }
-            goalPaths[PieceColor.GREEN] = greenGoal;
+            _goalPaths[PieceColor.GREEN] = greenGoal;
 
             // Yellow goal path
             Path yellowGoal = new Path();
@@ -102,12 +102,12 @@ public class PathManager
             string yellowDot = "\u001b[33m.\u001b[0m";
             foreach (var (r, c) in yellowGoalCoords)
             {
-                Square sq = getSquare(r, c);
+                Square sq = _getSquare(r, c);
                 yellowGoal.AddSquare(sq);
                 sq.Occupant = yellowDot;
                 sq.BaseMarker = yellowDot;
             }
-            goalPaths[PieceColor.YELLOW] = yellowGoal;
+            _goalPaths[PieceColor.YELLOW] = yellowGoal;
 
             // Blue goal path
             Path blueGoal = new Path();
@@ -118,16 +118,16 @@ public class PathManager
             string blueDot = "\u001b[34m.\u001b[0m";
             foreach (var (r, c) in blueGoalCoords)
             {
-                Square sq = getSquare(r, c);
+                Square sq = _getSquare(r, c);
                 blueGoal.AddSquare(sq);
                 sq.Occupant = blueDot;
                 sq.BaseMarker = blueDot;
             }
-            goalPaths[PieceColor.BLUE] = blueGoal;
+            _goalPaths[PieceColor.BLUE] = blueGoal;
         }
 
-        public Path GetFullPath() => fullPath;
-        public Path GetMainPath(PieceColor color) => mainPaths[color];
-        public Path GetGoalPath(PieceColor color) => goalPaths[color];
+        public Path GetFullPath() => _fullPath;
+        public Path GetMainPath(PieceColor color) => _mainPaths[color];
+        public Path GetGoalPath(PieceColor color) => _goalPaths[color];
     }
 

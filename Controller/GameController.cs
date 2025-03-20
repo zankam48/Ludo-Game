@@ -72,7 +72,7 @@ public class GameController
             {
                 for (int i=0; i<player.Pieces.Length; i++)
                 {
-                    player.Pieces[i].Status = PieceStatus.AT_HOME;
+                    player.Pieces[i].UpdatePieceStatus(PieceStatus.AT_HOME);
                     player.Pieces[i].Steps = 0;
                     player.Pieces[i].Position = player.Pieces[i].HomePosition;
                     _board.RegisterPieceAtHome(player.Pieces[i]);
@@ -120,7 +120,7 @@ public class GameController
                 for (int i = 0; i < currentPlayer.Pieces.Length; i++)
                 {
                     var piece = currentPlayer.Pieces[i];
-                    string status = GetPieceStatus(piece);
+                    string status = piece.GetPieceStatus();
                     _display.DisplayMessage($"  [{i + 1}] Piece {i + 1}: {status}");
                 }
 
@@ -186,12 +186,6 @@ public class GameController
         return piece;
     }
 
-    public string GetPieceStatus(IPiece piece)
-    {
-        if (piece.Status == PieceStatus.AT_HOME) return PieceStatus.AT_HOME.ToString();
-        if (piece.Status == PieceStatus.AT_GOAL) return PieceStatus.AT_GOAL.ToString();
-        return (piece.Position.Row, piece.Position.Column).ToString();
-    }
 
     public bool CanPlayerMove(IPlayer player, int rollValue)
     {
@@ -266,7 +260,7 @@ public class GameController
             _board.UpdatePiecePosition(piece, oldHomeSquare, startSquare);
 
             piece.Position = startSquare.Pos;
-            piece.Status = PieceStatus.IN_PLAY;
+            piece.UpdatePieceStatus(PieceStatus.IN_PLAY);
             piece.Steps = 0;
             return;
         }
@@ -295,7 +289,7 @@ public class GameController
                 newSquare = goalPath.GetSquare(over);
                 if (over == goalCount - 1)
                 {
-                    piece.Status = PieceStatus.AT_GOAL;
+                    piece.UpdatePieceStatus(PieceStatus.AT_GOAL);
                 }
             }
 

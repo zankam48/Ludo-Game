@@ -21,4 +21,16 @@ public class Piece : IPiece
         Status = PieceStatus.AT_HOME;
         Steps = 0;
     }
+
+    public string GetPieceStatus()
+    {
+        if (Status == PieceStatus.AT_HOME) return PieceStatus.AT_HOME.ToString();
+        if (Status == PieceStatus.AT_GOAL) return PieceStatus.AT_GOAL.ToString();
+        return (Position.Row, Position.Column).ToString();
+    }
+
+    public void UpdatePieceStatus(PieceStatus pieceStatus)
+    {
+        Status = pieceStatus;
+    }
 }

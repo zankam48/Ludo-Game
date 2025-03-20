@@ -3,15 +3,15 @@ using LudoGame.Interfaces;
 namespace LudoGame.Classes;
 public class Dice : IDice
 {
-    private Random rand;
+    private Random _rand;
     
     public Dice()
     {
-        rand = new Random();
+        _rand = new Random();
     }
     
     public int Roll()
     {
-        return rand.Next(1, 7);
+        return _rand.Next(1, 7);
     }
 }

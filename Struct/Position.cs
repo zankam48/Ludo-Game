@@ -20,5 +20,4 @@ public struct Position
         return (Row, Column).GetHashCode();
     }
 
-    public override string ToString() => $"({Row},{Column})";
 }
