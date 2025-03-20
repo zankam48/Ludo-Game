@@ -11,6 +11,7 @@ public class GameController
     private IPlayer[] players;
     private IDice dice;
     private Board board;
+    private IDisplay _display;
     public IPlayer currentPlayer;
     public GameState state;
     public int currentPlayerIndex;
@@ -20,11 +21,12 @@ public class GameController
     public delegate void HandleSixRollDelegate(IPlayer player, IPiece piece, int rollResult);
     public HandleSixRollDelegate OnSixRoll;
 
-    public GameController(IPlayer[] players, IDice dice, Board board)
+    public GameController(IPlayer[] players, IDice dice, Board board, IDisplay display)
     {
         this.players = players;
         this.dice = dice;  
         this.board = board;
+        _display = display;
         state = GameState.NOT_STARTED;
         currentPlayerIndex = 0;
         currentPlayer = players[currentPlayerIndex];
@@ -35,7 +37,104 @@ public class GameController
         state = GameState.PLAYING;
         currentPlayerIndex = 0;
         currentPlayer = players[currentPlayerIndex];
-        OnNextPlayerTurn?.Invoke(currentPlayer);
+        _display.DisplayMessage("Game Started!");
+        OnDiceRoll = (d) => d.Roll();
+        OnNextPlayerTurn = (player) => _display.DisplayMessage($"\n🔄 It's now {player.Name}'s turn ({player.Color})!");
+        OnSixRoll = (player, piece, rollResult) =>
+        {
+            _display.DisplayMessage($"🎉 {player.Name} rolled a 6!");
+            if (piece.Status == PieceStatus.AT_HOME)
+                _display.DisplayMessage("🏠 Bringing a piece out of home!");
+        };
+
+        while (true)
+        {
+            IPlayer currentPlayer = this.currentPlayer;
+            _display.DisplayMessage($"\nIt's {currentPlayer.Name}'s turn ({currentPlayer.Color})!");
+            bool triggerNext = false;
+
+            bool continueRolling;
+            do
+            {
+                continueRolling = false;
+                _display.DisplayMessage("🎲 Press any key to roll the dice...");
+                Display.InputKey(true);
+                // int rollValue = RollDice();
+                int rollValue = Convert.ToInt32(Console.ReadLine());
+                _display.DisplayMessage($"🎲 {currentPlayer.Name} rolled a {rollValue}.");
+
+                if (!CanPlayerMove(currentPlayer, rollValue))
+                {
+                    _display.DisplayMessage("❌ No available moves. Turn skipped.");
+                    break;
+                }
+
+                _display.DisplayMessage("Your pieces:");
+                for (int i = 0; i < currentPlayer.Pieces.Length; i++)
+                {
+                    var piece = currentPlayer.Pieces[i];
+                    string status = GetPieceStatus(piece);
+                    _display.DisplayMessage($"  [{i + 1}] Piece {i + 1}: {status}");
+                }
+
+                bool validMoveSelected = false;
+
+                while (!validMoveSelected)
+                {
+                    int selectedIndex = _display.GetIntInput("Select a piece to move (1-4): ");
+                    if (selectedIndex < 1 || selectedIndex > 4)
+                    {
+                        _display.DisplayMessage("❌ Invalid selection. Try again.");
+                        continue;
+                    }
+
+                    int pieceIdx = selectedIndex - 1;
+                    Piece? chosenPiece = SelectPiece(currentPlayer, pieceIdx, rollValue);
+
+                    if (chosenPiece == null)
+                    {
+                        _display.DisplayMessage("❌ Invalid move! Choose a piece that can actually move.");
+                        continue;
+                    }
+
+                    validMoveSelected = true;
+                    MovePiece(chosenPiece, rollValue);
+                }
+
+                _display.DisplayBoard(board);
+
+                if (currentPlayer.Pieces.All(p => p.Status == PieceStatus.AT_GOAL))
+                {
+                    _display.DisplayMessage($"🎉 {currentPlayer.Name} has finished all pieces!");
+                    NextPlayerTurn();
+                    triggerNext = true;
+                }
+
+                if (state == GameState.FINISHED)
+                {
+                    _display.DisplayMessage("\n🎉 Game Over! Here are the final rankings :\n");
+                    IPlayer[] ranking = GetWinner();
+
+                    for (int i=0; i<ranking.Length; i++)
+                    {
+                        _display.DisplayMessage($"🏆 Rank {i + 1}: {ranking[i].Name} ({ranking[i].Color}) - Score: {ranking[i].Score}");
+                    }
+
+                    IPlayer lastPlayer = ranking[ranking.Length - 1];
+                    _display.DisplayMessage($"💀 {lastPlayer.Name} ({lastPlayer.Color}) LOSES the game!");
+                    Environment.Exit(0);
+                }
+
+                if (rollValue == 6)
+                    continueRolling = true;
+
+            } while (continueRolling);
+            
+            if (!triggerNext){
+                NextPlayerTurn();
+            }
+
+        }
 
     }
 
@@ -43,6 +142,11 @@ public class GameController
     public void EndGame()
     {
         state = GameState.FINISHED;
+    }
+
+    public void ResetGame()
+    {
+
     }
 
     public Piece? SelectPiece(IPlayer player, int pieceIndex, int diceValue)
