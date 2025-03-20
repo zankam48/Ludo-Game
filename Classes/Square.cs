@@ -39,12 +39,4 @@ public class Square
         else
             Occupant = BaseMarker;
     }
-
-    public void ResetSquare()
-    {
-        Occupants.Clear();
-        Occupant = BaseMarker;
-    }
-
-    public bool isBlockade() => Occupants.Count > 1;
 }

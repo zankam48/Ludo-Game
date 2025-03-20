@@ -156,23 +156,6 @@ public class Board
         }
     }
 
-    public List<Piece> GetPiecesOnSquare(Square square)
-    {
-        if (piecePositions.TryGetValue(square.Pos, out List<Piece> pieces))
-            return pieces;
-        return new List<Piece>();
-    }
-
-    public bool IsHomeSquare(Square sq)
-    {
-        int r = sq.Row, c = sq.Col;
-        if ((r == 2 && (c == 2 || c == 4)) || (r == 4 && (c == 2 || c == 4))) return true;
-        if ((r == 2 && (c == 10 || c == 12)) || (r == 4 && (c == 10 || c == 12))) return true;
-        if ((r == 10 && (c == 2 || c == 4)) || (r == 12 && (c == 2 || c == 4))) return true;
-        if ((r == 10 && (c == 10 || c == 12)) || (r == 12 && (c == 10 || c == 12))) return true;
-        return false;
-    }
-
     public void UpdatePiecePosition(Piece piece, Square oldSquare, Square newSquare)
     {
         if (oldSquare != null)
