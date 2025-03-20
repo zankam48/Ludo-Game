@@ -63,14 +63,26 @@ public class GameController
 
         IPlayer lastPlayer = ranking[ranking.Length - 1];
         _display.DisplayMessage($"💀 {lastPlayer.Name} ({lastPlayer.Color}) LOSES the game!");
-        // Environment.Exit(0);
-        // prompt play again y/n
-        // if y startgame and reset everything, if n exit env
-        _display.DisplayMessage("Do you want to play again? (Y/N)");
         string input = _display.GetInput("Do you want to play again? (Y/N)");
         if (!string.IsNullOrEmpty(input) && input.ToUpper() == "Y")
         {
             // reset game
+            _board = new Board();
+            foreach (var player in _players)
+            {
+                for (int i=0; i<player.Pieces.Length; i++)
+                {
+                    player.Pieces[i].Status = PieceStatus.AT_HOME;
+                    player.Pieces[i].Steps = 0;
+                    player.Pieces[i].Position = player.Pieces[i].HomePosition;
+                    _board.RegisterPieceAtHome(player.Pieces[i]);
+                }
+            }
+            currentPlayerIndex = 0;
+            currentPlayer = _players[currentPlayerIndex];
+            state = GameState.PLAYING;
+            _display.DisplayBoard(_board);
+            _display.DisplayMessage("New Game!!");
             StartGame();
         }
         else 
