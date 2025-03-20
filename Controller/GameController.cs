@@ -16,10 +16,10 @@ public class GameController
     public GameState state;
     public int currentPlayerIndex;
 
-    public Func<Dice, int> OnDiceRoll;
-    public Action<IPlayer> OnNextPlayerTurn;
+    public Func<Dice, int>? OnDiceRoll;
+    public Action<IPlayer>? OnNextPlayerTurn;
     public delegate void HandleSixRollDelegate(IPlayer player, IPiece piece, int rollResult);
-    public HandleSixRollDelegate OnSixRoll;
+    public HandleSixRollDelegate? OnSixRoll;
 
     public GameController(IPlayer[] players, IDice dice, Board board, IDisplay display)
     {
@@ -106,8 +106,7 @@ public class GameController
                 continueRolling = false;
                 _display.DisplayMessage("🎲 Press any key to roll the _dice...");
                 Display.InputKey(true);
-                // int rollValue = RollDice();
-                int rollValue = Convert.ToInt32(Console.ReadLine());
+                int rollValue = RollDice();
                 _display.DisplayMessage($"🎲 {currentPlayer.Name} rolled a {rollValue}.");
 
                 if (!CanPlayerMove(currentPlayer, rollValue))
@@ -245,18 +244,18 @@ public class GameController
  
     public void MovePiece(IPiece ipiece, int diceValue)
     {
-        Piece piece = ipiece as Piece;
+        Piece? piece = ipiece as Piece;
         if (piece == null) return;  
         _board.KickPieceDelegate = KickPiece;
 
         if (piece.Status == PieceStatus.AT_HOME)
         {
-            Path mainPath = _board.PathManager.GetMainPath(piece.Color);
-            Square startSquare = mainPath.GetSquare(0);
+            Path? mainPath = _board.PathManager.GetMainPath(piece.Color);
+            Square? startSquare = mainPath.GetSquare(0);
 
             _board.HandleCollision(piece, startSquare);
 
-            Square oldHomeSquare = _board.GetSquare(piece.HomePosition.Row, piece.HomePosition.Column);
+            Square? oldHomeSquare = _board.GetSquare(piece.HomePosition.Row, piece.HomePosition.Column);
             _board.UpdatePiecePosition(piece, oldHomeSquare, startSquare);
 
             piece.Position = startSquare.Pos;
@@ -269,15 +268,15 @@ public class GameController
         {
             int newSteps = piece.Steps + diceValue;
 
-            Path mainPath = _board.PathManager.GetMainPath(piece.Color);
-            Path goalPath = _board.PathManager.GetGoalPath(piece.Color);
+            Path? mainPath = _board.PathManager.GetMainPath(piece.Color);
+            Path? goalPath = _board.PathManager.GetGoalPath(piece.Color);
 
             int mainCount = mainPath.Count;
             int goalCount = goalPath.Count;
             int total = mainCount + goalCount;
 
-            Square oldSquare = _board.GetSquare(piece.Position.Row, piece.Position.Column);
-            Square newSquare = null;
+            Square? oldSquare = _board.GetSquare(piece.Position.Row, piece.Position.Column);
+            Square? newSquare = null;
 
             if (newSteps < mainCount)
             {
