@@ -66,6 +66,18 @@ public class GameController
         // Environment.Exit(0);
         // prompt play again y/n
         // if y startgame and reset everything, if n exit env
+        _display.DisplayMessage("Do you want to play again? (Y/N)");
+        string input = _display.GetInput("Do you want to play again? (Y/N)");
+        if (!string.IsNullOrEmpty(input) && input.ToUpper() == "Y")
+        {
+            // reset game
+            StartGame();
+        }
+        else 
+        {
+            _display.DisplayMessage("Thanks for playing!");
+            Environment.Exit(0);
+        }
     }
 
     public void ExecuteTurn()
