@@ -31,7 +31,7 @@ namespace LudoGame.Classes
         public string GetInput(string prompt)
         {
             Console.Write(prompt);
-            return Console.ReadLine();
+            return Console.ReadLine() ?? "";
         }
 
         public int GetIntInput(string prompt)

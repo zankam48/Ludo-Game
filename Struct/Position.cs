@@ -10,7 +10,7 @@ public struct Position
         Column = column;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is Position other && Row == other.Row && Column == other.Column;
     }

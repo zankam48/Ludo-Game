@@ -27,7 +27,8 @@ class Program
 
         for (int i = 0; i < playerCount; i++)
         {
-            string playerName = display.GetInput($"Enter name for Player {i + 1}: ");
+            string? nameInput = display.GetInput($"Enter name for Player {i + 1}: ");
+            string playerName = string.IsNullOrWhiteSpace(nameInput) ? $"Player{i + 1}" : nameInput;
             display.DisplayMessage("Choose piece color:");
             for (int j = 0; j < availableColors.Count; j++)
                 display.DisplayMessage($"{j + 1}. {availableColors[j]}");
@@ -45,8 +46,8 @@ class Program
             Position[] homePositions = new Position[4];
             for (int j = 0; j < 4; j++)
             {
-                Square homeSq = board.GetHomeSquare(chosenColor, j);
-                homePositions[j] = homeSq.Pos;
+                Square? homeSq = board.GetHomeSquare(chosenColor, j);
+                homePositions[j] = homeSq?.Pos?? new Position(0,0);
             }
             IPlayer newPlayer = new Player(playerName, chosenColor, homePositions);
             players[i] = newPlayer;

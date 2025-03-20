@@ -1,3 +1,4 @@
+#nullable enable
 namespace LudoGame.Controller;
 using LudoGame.Interfaces;
 using LudoGame.Classes;
@@ -38,9 +39,9 @@ public class GameController
         currentPlayerIndex = 0;
         currentPlayer = _players[currentPlayerIndex];
         _display.DisplayMessage("Game Started!");
-        OnDiceRoll = (d) => d.Roll();
-        OnNextPlayerTurn = (player) => _display.DisplayMessage($"\n🔄 It's now {player.Name}'s turn ({player.Color})!");
-        OnSixRoll = (player, piece, rollResult) =>
+        OnDiceRoll ??= (d) => d.Roll();
+        OnNextPlayerTurn ??= (player) => _display.DisplayMessage($"\n🔄 It's now {player.Name}'s turn ({player.Color})!");
+        OnSixRoll ??= (player, piece, rollResult) =>
         {
             _display.DisplayMessage($"🎉 {player.Name} rolled a 6!");
             if (piece.Status == PieceStatus.AT_HOME)
@@ -250,15 +251,15 @@ public class GameController
 
         if (piece.Status == PieceStatus.AT_HOME)
         {
-            Path? mainPath = _board.PathManager.GetMainPath(piece.Color);
-            Square? startSquare = mainPath.GetSquare(0);
+            var mainPath = _board.PathManager.GetMainPath(piece.Color);
+            var startSquare = mainPath.GetSquare(0);
 
             _board.HandleCollision(piece, startSquare);
 
-            Square? oldHomeSquare = _board.GetSquare(piece.HomePosition.Row, piece.HomePosition.Column);
+            var oldHomeSquare = _board.GetSquare(piece.HomePosition.Row, piece.HomePosition.Column);
             _board.UpdatePiecePosition(piece, oldHomeSquare, startSquare);
 
-            piece.Position = startSquare.Pos;
+            piece.Position = startSquare?.Pos ?? piece.Position;
             piece.UpdatePieceStatus(PieceStatus.IN_PLAY);
             piece.Steps = 0;
             return;
@@ -268,14 +269,14 @@ public class GameController
         {
             int newSteps = piece.Steps + diceValue;
 
-            Path? mainPath = _board.PathManager.GetMainPath(piece.Color);
-            Path? goalPath = _board.PathManager.GetGoalPath(piece.Color);
+            var mainPath = _board.PathManager.GetMainPath(piece.Color);
+            var goalPath = _board.PathManager.GetGoalPath(piece.Color);
 
             int mainCount = mainPath.Count;
             int goalCount = goalPath.Count;
             int total = mainCount + goalCount;
 
-            Square? oldSquare = _board.GetSquare(piece.Position.Row, piece.Position.Column);
+            var oldSquare = _board.GetSquare(piece.Position.Row, piece.Position.Column);
             Square? newSquare = null;
 
             if (newSteps < mainCount)
@@ -295,8 +296,10 @@ public class GameController
             _board.HandleCollision(piece, newSquare);
 
             _board.UpdatePiecePosition(piece, oldSquare, newSquare);
-
-            piece.Position = newSquare.Pos;
+            if (newSquare != null)
+            {
+                piece.Position = newSquare.Pos;
+            }
             piece.Steps = newSteps;
         }
     }
@@ -306,10 +309,13 @@ public class GameController
     {
         if (occupant == null) return;
 
-        Square oldSquare = _board.GetSquare(occupant.Position.Row, occupant.Position.Column);
-        Square homeSquare = _board.GetSquare(occupant.HomePosition.Row, occupant.HomePosition.Column);
+        var oldSquare = _board.GetSquare(occupant.Position.Row, occupant.Position.Column);
+        var homeSquare = _board.GetSquare(occupant.HomePosition.Row, occupant.HomePosition.Column);
         _board.UpdatePiecePosition(occupant, oldSquare, homeSquare);
-        occupant.Position = homeSquare.Pos;
+        if (homeSquare != null)
+        {
+            occupant.Position = homeSquare.Pos;
+        }
         occupant.Status = PieceStatus.AT_HOME;
         occupant.Steps = 0;
     }

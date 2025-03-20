@@ -16,7 +16,7 @@ public class Board
         new Position(1,8), new Position(2,6), new Position(6,1), new Position(8,2)
     };
 
-    public Action<Piece> KickPieceDelegate { get; set; }
+    public Action<Piece>? KickPieceDelegate { get; set; }
 
     public Board()
     {
@@ -33,18 +33,18 @@ public class Board
 
         MarkEdges();
         MarkSafeZones(safeCoords);
-        PathManager = new PathManager((r, c) => GetSquare(r, c));
+        PathManager = new PathManager((r, c) => GetSquare(r, c)!);
         InitializePathVisuals();
     }
 
-    public Square GetSquare(int row, int col)
+    public Square? GetSquare(int row, int col)
     {
         if (row >= 0 && row < BoardSize && col >= 0 && col < BoardSize)
             return grid[row, col];
         return null;
     }
 
-    public Square GetHomeSquare(PieceColor color, int pieceIndex)
+    public Square? GetHomeSquare(PieceColor color, int pieceIndex)
     {
         switch (color)
         {
@@ -76,14 +76,14 @@ public class Board
         return null;
     }
 
-    public void HandleCollision(Piece movingPiece, Square targetSquare)
+    public void HandleCollision(Piece movingPiece, Square? targetSquare)
     {
         if (targetSquare == null) return;
 
         if (safeCoords.Contains(targetSquare.Pos))
             return;
 
-        if (piecePositions.TryGetValue(targetSquare.Pos, out List<Piece> piecesOnSquare))
+        if (piecePositions.TryGetValue(targetSquare.Pos, out List<Piece>? piecesOnSquare))
         {
             foreach (var occupant in piecesOnSquare.Where(p => p.Color != movingPiece.Color).ToList())
             {
@@ -106,7 +106,7 @@ public class Board
             piecePositions[homePos] = new List<Piece> { piece };
         }
 
-        Square homeSquare = GetSquare(homePos.Row, homePos.Column);
+        Square? homeSquare = GetSquare(homePos.Row, homePos.Column);
         if (homeSquare != null)
         {
             homeSquare.Occupant = piece.Marker;
@@ -117,17 +117,17 @@ public class Board
     {
         for (int c = 0; c < BoardSize; c++)
         {
-            GetSquare(0, c).Occupant = ".";
-            GetSquare(0, c).BaseMarker = ".";
-            GetSquare(BoardSize - 1, c).Occupant = ".";
-            GetSquare(BoardSize - 1, c).BaseMarker = ".";
+            GetSquare(0, c)!.Occupant = ".";
+            GetSquare(0, c)!.BaseMarker = ".";
+            GetSquare(BoardSize - 1, c)!.Occupant = ".";
+            GetSquare(BoardSize - 1, c)!.BaseMarker = ".";
         }
         for (int r = 0; r < BoardSize; r++)
         {
-            GetSquare(r, 0).Occupant = ".";
-            GetSquare(r, 0).BaseMarker = ".";
-            GetSquare(r, BoardSize - 1).Occupant = ".";
-            GetSquare(r, BoardSize - 1).BaseMarker = ".";
+            GetSquare(r, 0)!.Occupant = ".";
+            GetSquare(r, 0)!.BaseMarker = ".";
+            GetSquare(r, BoardSize - 1)!.Occupant = ".";
+            GetSquare(r, BoardSize - 1)!.BaseMarker = ".";
         }
     }
 
@@ -135,7 +135,7 @@ public class Board
     {
         foreach (var pos in safeCoords)
         {
-            Square sq = GetSquare(pos.Row, pos.Column);
+            Square? sq = GetSquare(pos.Row, pos.Column);
             if (sq != null)
             {
                 sq.Occupant = "*";
@@ -156,7 +156,7 @@ public class Board
         }
     }
 
-    public void UpdatePiecePosition(Piece piece, Square oldSquare, Square newSquare)
+    public void UpdatePiecePosition(Piece piece, Square? oldSquare, Square? newSquare)
     {
         if (oldSquare != null)
         {
