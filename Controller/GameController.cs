@@ -14,6 +14,8 @@ public class GameController
     private Board _board;
     private IDisplay _display;
     public IPlayer currentPlayer;
+    private List<IPlayer> _finishedPlayers = new List<IPlayer>(); 
+
     public GameState state;
     public int currentPlayerIndex;
 
@@ -55,19 +57,18 @@ public class GameController
     {
         state = GameState.FINISHED;
         _display.DisplayMessage("\n🎉 Game Over! Here are the final rankings :\n");
-        IPlayer[] ranking = GetWinner();
+        IPlayer[] playerResult = GetWinner();
 
-        for (int i=0; i<ranking.Length; i++)
+        for (int i=0; i<playerResult.Length; i++)
         {
-            _display.DisplayMessage($"🏆 Rank {i + 1}: {ranking[i].Name} ({ranking[i].Color}) - Score: {ranking[i].Score}");
+            _display.DisplayMessage($"{playerResult[i].Name} ({playerResult[i].Color}) - Score: {playerResult[i].Score}");
         }
 
-        IPlayer lastPlayer = ranking[ranking.Length - 1];
+        IPlayer lastPlayer = playerResult[playerResult.Length - 1];
         _display.DisplayMessage($"💀 {lastPlayer.Name} ({lastPlayer.Color}) LOSES the game!");
         string input = _display.GetInput("Do you want to play again? (Y/N)");
         if (!string.IsNullOrEmpty(input) && input.ToUpper() == "Y")
         {
-            // reset game
             _board = new Board();
             foreach (var player in _players)
             {
