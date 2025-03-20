@@ -4,10 +4,9 @@ Welcome to the Ludo Game, a classic board game implemented in C# with a console-
 
 ## 🚀 Features
 
-- ✅ Fully Playable Ludo Game with 2-4 Players
-- ✅ Console-Based UI for a smooth experience
+- ✅ Ludo Game with 2-4 Players
 - ✅ Turn-Based Gameplay with dice rolling
-- ✅ Automatic Collision Handling (Kick opponent pieces!)
+- ✅ Collision Handling (Kick opponent pieces)
 - ✅ Safe Zones & Goal Paths
 - ✅ Multiplayer (Local Play) Support
 - ✅ Play Again Functionality after game ends
