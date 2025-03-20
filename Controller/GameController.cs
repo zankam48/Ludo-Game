@@ -50,9 +50,27 @@ public class GameController
         ExecuteTurn();
     }
 
+    public void EndGame()
+    {
+        state = GameState.FINISHED;
+        _display.DisplayMessage("\n🎉 Game Over! Here are the final rankings :\n");
+        IPlayer[] ranking = GetWinner();
+
+        for (int i=0; i<ranking.Length; i++)
+        {
+            _display.DisplayMessage($"🏆 Rank {i + 1}: {ranking[i].Name} ({ranking[i].Color}) - Score: {ranking[i].Score}");
+        }
+
+        IPlayer lastPlayer = ranking[ranking.Length - 1];
+        _display.DisplayMessage($"💀 {lastPlayer.Name} ({lastPlayer.Color}) LOSES the game!");
+        // Environment.Exit(0);
+        // prompt play again y/n
+        // if y startgame and reset everything, if n exit env
+    }
+
     public void ExecuteTurn()
     {
-        while (true)
+        while (state == GameState.PLAYING)
         {
             IPlayer currentPlayer = this.currentPlayer;
             _display.DisplayMessage($"\nIt's {currentPlayer.Name}'s turn ({currentPlayer.Color})!");
@@ -117,17 +135,7 @@ public class GameController
 
                 if (state == GameState.FINISHED)
                 {
-                    _display.DisplayMessage("\n🎉 Game Over! Here are the final rankings :\n");
-                    IPlayer[] ranking = GetWinner();
-
-                    for (int i=0; i<ranking.Length; i++)
-                    {
-                        _display.DisplayMessage($"🏆 Rank {i + 1}: {ranking[i].Name} ({ranking[i].Color}) - Score: {ranking[i].Score}");
-                    }
-
-                    IPlayer lastPlayer = ranking[ranking.Length - 1];
-                    _display.DisplayMessage($"💀 {lastPlayer.Name} ({lastPlayer.Color}) LOSES the game!");
-                    Environment.Exit(0);
+                    break;
                 }
 
                 if (rollValue == 6)
@@ -135,21 +143,11 @@ public class GameController
 
             } while (continueRolling);
             
-            if (!triggerNext){
+            if (!triggerNext && state == GameState.PLAYING){
                 NextPlayerTurn();
             }
+
         }
-    }
-
-    // play again
-    public void EndGame()
-    {
-        state = GameState.FINISHED;
-    }
-
-    public void ResetGame()
-    {
-
     }
 
     public Piece? SelectPiece(IPlayer player, int pieceIndex, int diceValue)
